@@ -17,13 +17,15 @@ const Sidebar = () => {
     const [loading, setLoading] = useState(false);
 
     const Menus = [
+        { name: "UHome", path: "/my_dashboard", icon: HomeIcon },
+        { name: "Services", path: "/services/home", icon: PiPlant },
+        { name: "Bookings", path: "/bookings/home", icon: IoCalendarOutline },
+        { name: "My Profile", path: "/profile/home", icon: CgProfile },
+
         { name: "Home", path: "/dashboard", icon: HomeIcon },
-        { name: "Schedules", path: "/finances/home", icon: IoCalendarOutline },
-        { name: "Services", path: "/crop/home", icon: PiPlant },
-        { name: "Finances", path: "/employees/home", icon: BanknotesIcon },
-        { name: "My Profile", path: "/inventory/home", icon: CgProfile },
-        { name: "Appointments", path: "/insights/marketprice", icon: IoCalendarNumberOutline },
-        { name: "Records", path: "/diseases/home", icon: IoDocumentTextOutline },
+        { name: "Finances", path: "/finances/home", icon: BanknotesIcon },
+        { name: "Appointments", path: "/appointments/home", icon: IoCalendarNumberOutline },
+        { name: "Patients Records", path: "/patients/home", icon: IoDocumentTextOutline },
     ];
 
     const isActive = (path) => {
@@ -72,7 +74,7 @@ const Sidebar = () => {
                 </div>
 
                 {/* Logout Button */}
-                <div className="pb-4">
+                <div className="pb-16">
                     <li
                         className={`flex rounded-md p-4 cursor-pointer text-gray-800 font-semibold text-md items-center gap-x-4 focus:outline-none focus:ring focus:ring-lime-500 transition-all duration-200 px-1 hover:bg-red-100 hover:text-red-700 hover:rounded-xl hover:shadow-xl ${
                             open ? "justify-start" : "justify-center"
