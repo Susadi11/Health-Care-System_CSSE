@@ -47,21 +47,7 @@ const Sidebar = () => {
                     >
                         {open ? <IoIosArrowDropleft size={24} /> : <IoIosArrowDropright size={24} />}
                     </div>
-                    <div className="flex gap-x-4 items-center">
-                        <img
-                            src="/path-to-your-logo.png"
-                            className={`cursor-pointer duration-500 ${open && "rotate-[360deg]"}`}
-                            alt="Logo"
-                        />
-                        <h1
-                            className={`text-black origin-left font-medium text-xl duration-200 ${
-                                !open && "scale-0"
-                            }`}
-                        >
-                            Your App Name
-                        </h1>
-                    </div>
-                    <ul className="pt-6">
+                    <ul className="pt-1">
                         {Menus.map((menu, index) => (
                             <Link to={menu.path} key={index}>
                                 <li

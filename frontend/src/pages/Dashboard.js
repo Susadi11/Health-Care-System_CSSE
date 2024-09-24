@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {SnackbarProvider} from "notistack";
 import SideBar from "../components/SideBar";
+import Navbar from "../components/utility/Navbar";
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false);
@@ -22,6 +23,7 @@ export default function Dashboard() {
         <SnackbarProvider>
             <div className="">
                 <div className="sticky top-0 z-10">
+                    <Navbar/>
 
                 </div>
                 <div className="">
