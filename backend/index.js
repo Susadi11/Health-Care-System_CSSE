@@ -2,6 +2,7 @@ import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import cors from "cors";
+import products from "./routes/products.js";
 
 const app = express();
 
@@ -20,10 +21,10 @@ app.use(cors({
 
 app.get('/', (request, response) => {
     console.log(request);
-    return response.status(234).send('welcome to Susadi akkage backend eka');
+    return response.status(234).send('welcome to CARENET');
 });
 
-
+app.use('/products', products);
 
 
 
