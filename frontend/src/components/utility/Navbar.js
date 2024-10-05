@@ -42,11 +42,18 @@ export default function Navbar() {
                 </div>
 
                 {/* Right side of the navbar */}
-                <div className="flex lg:flex-1 justify-end">
+                <div className="flex lg:flex-1 justify-end space-x-3">
                     {/* Login button - visible on desktop, hidden on mobile */}
                     <Link to="/login" className="hidden lg:block nav-item">
                         <div className="px-3 py-1 border border-lime-500 text-sm leading-4 font-medium rounded-full text-black transition-all duration-200 hover:bg-lime-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500">
                             Login
+                        </div>
+                    </Link>
+
+                    {/* Sign Up button - visible on desktop, hidden on mobile */}
+                    <Link to="/signup" className="hidden lg:block nav-item">
+                        <div className="px-3 py-1 border border-lime-500 bg-lime-500 text-sm leading-4 font-medium rounded-full text-white transition-all duration-200 hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500">
+                            Sign Up
                         </div>
                     </Link>
 
@@ -74,6 +81,7 @@ export default function Navbar() {
                         <Link to="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Dashboard</Link>
                         <Link to="/tourism" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Services</Link>
                         <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Login</Link>
+                        <Link to="/signUp" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Sign Up</Link>
                     </div>
                 </div>
             )}
