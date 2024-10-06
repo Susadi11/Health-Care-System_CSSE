@@ -9,6 +9,8 @@ import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { HomeIcon, BanknotesIcon, ArrowLeftStartOnRectangleIcon } from '@heroicons/react/24/outline';
 import { PiPlant } from "react-icons/pi";
+import { BsQrCode } from "react-icons/bs";
+import { MdOutlineMedicalServices } from "react-icons/md";
 import axios from 'axios';
 
 const Sidebar = () => {
@@ -17,15 +19,15 @@ const Sidebar = () => {
     const [loading, setLoading] = useState(false);
 
     const Menus = [
-        { name: "UHome", path: "/my_dashboard", icon: HomeIcon },
-        { name: "Services", path: "/services/home", icon: PiPlant },
+        { name: "Profile", path: "/profile", icon: CgProfile },
+        { name: "Services", path: "/services/home", icon: MdOutlineMedicalServices  },
         { name: "Bookings", path: "/bookings/home", icon: IoCalendarOutline },
-        { name: "My Profile", path: "/profile/home", icon: CgProfile },
 
         { name: "Home", path: "/dashboard", icon: HomeIcon },
         { name: "Finances", path: "/finances/home", icon: BanknotesIcon },
         { name: "Appointments", path: "/appointments/home", icon: IoCalendarNumberOutline },
         { name: "Patients Records", path: "/patients/home", icon: IoDocumentTextOutline },
+        { name: "QR Scanner", path: "/QR_Scanner/home", icon: BsQrCode },
     ];
 
     const isActive = (path) => {

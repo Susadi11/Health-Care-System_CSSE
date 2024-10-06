@@ -4,7 +4,7 @@ import Dashboard from "./pages/Dashboard";
 import LandingPage from "./pages/landingPage";
 import LoginPage from "./pages/loginPage";
 import SignUpPage from "./pages/signUpPage";
-
+import QR_Page from "./pages/HealthCard_Pages/QR_Page";
 
 export default function App() {
     const [loading, setLoading] = useState(true);
@@ -27,6 +27,7 @@ export default function App() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/login" element={<LoginPage/>} />
                 <Route path="/signUp" element={<SignUpPage/>} />
+                <Route path="//QR_Scanner/home" element={<QR_Page />} />
             </Routes>
         </div>
     );

@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import {SnackbarProvider} from "notistack";
 import SideBar from "../components/SideBar";
 import Navbar from "../components/utility/Navbar";
+import BackButton from "../components/utility/BackButton";
+import Breadcrumb from "../components/utility/Breadcrumbs";
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false);
@@ -34,7 +36,8 @@ export default function Dashboard() {
 
                         <div className="w-full col-span-5 flex flex-col ">
                             <div className="flex flex-row ">
-
+                                <BackButton />
+                                <Breadcrumb items={breadcrumbItems} />
                             </div>
                             <div className="p-4">
 
