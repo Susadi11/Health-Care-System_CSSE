@@ -2,7 +2,6 @@ import express from "express";
 import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import cors from "cors";
-import products from "./routes/products.js";
 import patientRoute from "./routes/Health_Card/patientRoute.js";
 
 const app = express();
@@ -25,7 +24,6 @@ app.get('/', (request, response) => {
     return response.status(234).send('welcome to CARENET');
 });
 
-app.use('/products', products);
 app.use('/patientRoute', patientRoute);
 
 

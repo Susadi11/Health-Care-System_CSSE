@@ -4,12 +4,16 @@ import SideBar from "../../components/SideBar";
 import Navbar from "../../components/utility/Navbar";
 import Breadcrumb from "../../components/utility/Breadcrumbs";
 import BackButton from "../../components/utility/BackButton";
-import QR_Generator from "../../components/Health_Card/QR_Generator";
+import QRScanner from "../../components/Health_Card/QRScanner"; // Import QRScanner
 import { MdQrCodeScanner } from "react-icons/md";
 
 export default function QR_Page() {
     const [loading, setLoading] = useState(false);
     const [currentTile, setCurrentTile] = useState(1);
+    const [showScanner, setShowScanner] = useState(false); // State to toggle scanner
+    const [cameras, setCameras] = useState([]);
+    const [selectedCamera, setSelectedCamera] = useState(null);
+    const [hasCameraPermission, setHasCameraPermission] = useState(false);
 
     const breadcrumbItems = [
         { name: 'QR Scanner', href: '/QR_Scanner/home' }
@@ -22,6 +26,36 @@ export default function QR_Page() {
 
         return () => clearInterval(timer);
     }, []);
+
+    const requestCameraPermission = async () => {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+            setHasCameraPermission(true);
+            stream.getTracks().forEach(track => track.stop());
+
+            const devices = await navigator.mediaDevices.enumerateDevices();
+            const videoDevices = devices.filter(device => device.kind === "videoinput");
+            setCameras(videoDevices);
+            console.log("Available cameras:", videoDevices);
+
+            const backCamera = videoDevices.find(device => device.label.toLowerCase().includes('back'));
+            if (backCamera) {
+                setSelectedCamera(backCamera.deviceId);
+            } else if (videoDevices.length > 0) {
+                setSelectedCamera(videoDevices[0].deviceId);
+            }
+        } catch (err) {
+            console.error("Error requesting camera permission:", err);
+            setHasCameraPermission(false);
+        }
+    };
+
+    const handleScanButtonClick = async () => {
+        await requestCameraPermission();
+        if (hasCameraPermission) {
+            setShowScanner(true); // Show scanner if permission granted
+        }
+    };
 
     return (
         <SnackbarProvider>
@@ -41,12 +75,16 @@ export default function QR_Page() {
                         <div className="flex justify-start mb-4">
                             <button
                                 className="flex items-center bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md focus:outline-none ml-10"
+                                onClick={handleScanButtonClick} // Trigger the scan button
                             >
                                 <MdQrCodeScanner className="mr-2" size={20} />
                                 <span className="text-sm sm:text-base">Scan QR</span>
                             </button>
                         </div>
 
+                        {showScanner && hasCameraPermission && (
+                            <QRScanner selectedCamera={selectedCamera} /> // Render QRScanner if showScanner is true
+                        )}
                     </div>
                 </div>
             </div>
