@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { MdArrowForward } from 'react-icons/md'; // Using Material Icon (React Icons)
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
@@ -45,9 +46,9 @@ const LoginPage = () => {
                                 />
                             </div>
                             <Link to="#" className="group text-blue-400 transition-all duration-100 ease-in-out">
-                <span className="bg-left-bottom bg-gradient-to-r text-sm from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                  Forget your password?
-                </span>
+                                <span className="bg-left-bottom bg-gradient-to-r text-sm from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+                                    Forget your password?
+                                </span>
                             </Link>
                             <button
                                 className="bg-gradient-to-r dark:text-gray-300 from-blue-500 to-purple-500 shadow-lg mt-6 p-2 text-white rounded-lg w-full hover:scale-105 hover:from-purple-500 hover:to-blue-500 transition duration-300 ease-in-out"
@@ -61,9 +62,9 @@ const LoginPage = () => {
                             <h3 className="dark:text-gray-300">
                                 Already have an account?
                                 <Link to="#" className="group text-blue-400 transition-all duration-100 ease-in-out">
-                  <span className="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                    Log In
-                  </span>
+                                    <span className="bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+                                        Log In
+                                    </span>
                                 </Link>
                             </h3>
                         </div>
@@ -93,20 +94,25 @@ const LoginPage = () => {
                             <p className="cursor-default">
                                 By signing in, you agree to our
                                 <Link to="#" className="group text-blue-400 transition-all duration-100 ease-in-out">
-                  <span className="cursor-pointer bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                    Terms
-                  </span>
+                                    <span className="cursor-pointer bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+                                        Terms
+                                    </span>
                                 </Link>
                                 and
                                 <Link to="#" className="group text-blue-400 transition-all duration-100 ease-in-out">
-                  <span className="cursor-pointer bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-                    Privacy Policy
-                  </span>
+                                    <span className="cursor-pointer bg-left-bottom bg-gradient-to-r from-blue-400 to-blue-400 bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
+                                        Privacy Policy
+                                    </span>
                                 </Link>
                             </p>
                         </div>
                     </div>
                 </div>
+
+                {/* Next Page Arrow */}
+                <Link to="/signup/register" className="fixed bottom-10 right-10 z-50">
+                    <MdArrowForward className="text-blue-500 hover:text-purple-500 transition duration-300 ease-in-out" size={50} />
+                </Link>
             </div>
         </div>
     );

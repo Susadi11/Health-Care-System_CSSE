@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import {
     IoCalendarOutline,
@@ -8,10 +8,8 @@ import {
 import { IoIosArrowDropleft, IoIosArrowDropright } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { HomeIcon, BanknotesIcon, ArrowLeftStartOnRectangleIcon } from '@heroicons/react/24/outline';
-import { PiPlant } from "react-icons/pi";
 import { BsQrCode } from "react-icons/bs";
 import { MdOutlineMedicalServices } from "react-icons/md";
-import axios from 'axios';
 
 const Sidebar = () => {
     const [open, setOpen] = useState(true);
@@ -22,7 +20,6 @@ const Sidebar = () => {
         { name: "Profile", path: "/profile", icon: CgProfile },
         { name: "Services", path: "/services/home", icon: MdOutlineMedicalServices  },
         { name: "Bookings", path: "/bookings/home", icon: IoCalendarOutline },
-
         { name: "Home", path: "/dashboard", icon: HomeIcon },
         { name: "Finances", path: "/finances/home", icon: BanknotesIcon },
         { name: "Appointments", path: "/appointments/home", icon: IoCalendarNumberOutline },
@@ -37,12 +34,14 @@ const Sidebar = () => {
 
     return (
         <div className="flex">
+            {/* Sidebar with fixed positioning */}
             <div
                 className={`${
                     open ? "w-72" : "w-24"
-                } bg-gray-100 h-screen p-5 pt-8 relative duration-300 flex flex-col justify-between`}
+                } bg-gray-100 h-screen fixed top-12 left-0 p-5 pt-8 flex flex-col justify-between transition-all duration-300`}
             >
                 <div>
+                    {/* Toggle Sidebar Button */}
                     <div
                         className={`absolute cursor-pointer -right-3 top-9 w-7 border-2 rounded-full bg-white ${
                             !open ? "rotate-180" : ""
@@ -51,13 +50,15 @@ const Sidebar = () => {
                     >
                         {open ? <IoIosArrowDropleft size={24} /> : <IoIosArrowDropright size={24} />}
                     </div>
+
+                    {/* Sidebar Menu */}
                     <ul className="pt-1">
                         {Menus.map((menu, index) => (
                             <Link to={menu.path} key={index}>
                                 <li
                                     className={`flex rounded-md p-4 cursor-pointer text-gray-800 font-semibold text-md items-center gap-x-4 focus:outline-none focus:ring focus:ring-lime-500 transition-all duration-200 px-1 hover:bg-gray-200 hover:rounded-xl hover:shadow-xl
                         ${menu.gap ? "mt-9" : "mt-2"} ${
-                                        isActive(menu.path) && "bg-gray-200 text-lime-700 rounded-xl px-3 shadow-xl hover:bg-gray-200 hover:rounded-xl hover:shadow-xl"
+                                        isActive(menu.path) && "bg-gray-200 text-lime-700 rounded-xl px-3 shadow-xl"
                                     }`}
                                 >
                                     {React.createElement(menu.icon, { className: 'w-5 h-5 ml-2' })}
@@ -91,6 +92,7 @@ const Sidebar = () => {
                     </li>
                 </div>
             </div>
+
         </div>
     );
 };
