@@ -27,8 +27,8 @@ const QRScanner = ({ selectedCamera }) => {
     };
 
     const previewStyle = {
-        height: 300,
-        width: 300,
+        height: 500,
+        width: 500,
     };
 
     return (
