@@ -28,12 +28,50 @@ const QR_Generator = () => {
         return JSON.stringify(formData);
     };
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('http://localhost:5555/patientRoute', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                console.log('Patient registered:', data.patient);
+                alert('Patient registered successfully! QR Code generated.');
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    dob: '',
+                    gender: 'Male',
+                    email: '',
+                    phone: '',
+                    address: '',
+                    insuranceNumber: '',
+                    physician: '',
+                    medicalHistory: '',
+                    bloodType: '',
+                    emergencyContact: '',
+                });
+            } else {
+                alert(`Error: ${data.message}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while registering the patient.');
+        }
+    };
+
     return (
         <div className="bg-white flex flex-col lg:flex-row items-start justify-center gap-6">
             {/* Left Card: Registration Form */}
             <div className="bg-white shadow-lg rounded-lg p-4 w-full lg:w-3/5">
                 <h1 className="text-2xl font-bold text-center text-green-600 mb-4">Patient Registration</h1>
-                <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleSubmit}>
                     {/* Personal Information */}
                     <div>
                         <label className="block text-gray-700 text-sm font-bold mb-2">First Name</label>
@@ -180,6 +218,16 @@ const QR_Generator = () => {
                             onChange={handleChange}
                             placeholder="Name, Relationship, Phone"
                         />
+                    </div>
+
+                    {/* Register Button */}
+                    <div className="col-span-1 md:col-span-2">
+                        <button
+                            type="submit"
+                            className="bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition duration-200 w-full"
+                        >
+                            Register
+                        </button>
                     </div>
                 </form>
             </div>

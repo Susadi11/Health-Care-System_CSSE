@@ -3,6 +3,7 @@ import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import cors from "cors";
 import products from "./routes/products.js";
+import patientRoute from "./routes/Health_Card/patientRoute.js";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.get('/', (request, response) => {
 });
 
 app.use('/products', products);
+app.use('/patientRoute', patientRoute);
 
 
 
