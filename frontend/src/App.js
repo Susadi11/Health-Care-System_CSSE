@@ -7,6 +7,8 @@ import SignUpPage from "./pages/signUpPage";
 import QR_Page from "./pages/HealthCard_Pages/QR_Page";
 import RegPage from "./pages/HealthCard_Pages/regPage"; // Renamed to RegPage
 
+import Patients from "./pages/Admin/Patients";
+
 export default function App() {
     const [loading, setLoading] = useState(true);
 
@@ -28,6 +30,7 @@ export default function App() {
                 <Route path="/signUp" element={<SignUpPage />} />
                 <Route path="/QR_Scanner/home" element={<QR_Page />} />
                 <Route path="/signup/register" element={<RegPage />} /> {/* Updated here */}
+                <Route path="/patients/home" element={<Patients />} />
             </Routes>
         </div>
     );

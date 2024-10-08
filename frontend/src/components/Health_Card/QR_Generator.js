@@ -1,5 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { QRCodeCanvas } from 'qrcode.react';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+import { FiDownload } from 'react-icons/fi'; // For download icon
 
 const QR_Generator = () => {
     const [formData, setFormData] = useState({
@@ -16,6 +19,8 @@ const QR_Generator = () => {
         bloodType: '',
         emergencyContact: '',
     });
+
+    const qrRef = useRef(); // To reference the QR code element
 
     const handleChange = (e) => {
         setFormData({
@@ -64,6 +69,15 @@ const QR_Generator = () => {
             console.error('Error:', error);
             alert('An error occurred while registering the patient.');
         }
+    };
+
+    // Function to download the QR code as a PDF
+    const downloadQRCodePDF = async () => {
+        const canvas = await html2canvas(qrRef.current); // Capture the QR code
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 10, 10, 180, 180); // Adjust size and position of the QR code in the PDF
+        pdf.save(`${formData.firstName}_${formData.lastName}_QRCode.pdf`); // Save as PDF
     };
 
     return (
@@ -235,9 +249,16 @@ const QR_Generator = () => {
             {/* Right Card: QR Code Display */}
             <div className="bg-white shadow-lg rounded-lg p-4 w-full lg:w-2/5 mt-6 lg:mt-0 flex flex-col justify-center items-center">
                 <h2 className="text-xl font-semibold text-gray-700 mb-4">Generated QR Code</h2>
-                <div className="border p-4 bg-gray-50 rounded-lg">
+                <div className="border p-4 bg-gray-50 rounded-lg" ref={qrRef}>
                     <QRCodeCanvas value={generateQRCodeData()} size={200} />
                 </div>
+                {/* Download Button */}
+                <button
+                    className="flex items-center bg-green-600 text-white font-bold py-2 px-4 rounded mt-4 hover:bg-green-700 transition duration-200"
+                    onClick={downloadQRCodePDF}
+                >
+                    <FiDownload className="mr-2" /> Download QR Code
+                </button>
             </div>
         </div>
     );

@@ -3,7 +3,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faSearch, faFileDownload } from '@fortawesome/free-solid-svg-icons';
 import { jsPDF } from 'jspdf';
 import PatientForm from '../../components/vindi/PatientForm';
-import 'jspdf-autotable'; 
+import 'jspdf-autotable';
+import { SnackbarProvider } from 'notistack';
+import SideBar from '../../components/SideBar';
+import Navbar from '../../components/utility/Navbar';
+import Breadcrumb from '../../components/utility/Breadcrumbs';
+import BackButton from '../../components/utility/BackButton';
 
 const Patients = () => {
     const [patients, setPatients] = useState([]);
@@ -65,7 +70,7 @@ const Patients = () => {
             if (!response.ok) throw new Error('Failed to update the patient');
 
             const updatedPatient = await response.json();
-            setPatients(prevPatients => prevPatients.map(patient => 
+            setPatients(prevPatients => prevPatients.map(patient =>
                 patient._id === updatedPatient._id ? updatedPatient : patient
             ));
             setEditMode(false);
@@ -77,15 +82,15 @@ const Patients = () => {
     };
 
     const handleReport = () => {
-        const doc = new jsPDF('p', 'mm', 'a4'); 
-    
+        const doc = new jsPDF('p', 'mm', 'a4');
+
         doc.setFontSize(18);
         doc.text('Patients Report', doc.internal.pageSize.getWidth() / 2, 13, { align: 'center' });
 
         const headers = [
             ['First Name', 'Phone', 'Address', 'Insurance Number', 'Physician', 'Medical History', 'Blood Type', 'Emergency Contact']
         ];
-    
+
         const data = patients.map(patient => [
             patient.firstName || '',
             patient.phone || '',
@@ -96,7 +101,7 @@ const Patients = () => {
             patient.bloodType || '',
             doc.splitTextToSize(patient.emergencyContact || '', 50)
         ]);
-    
+
         doc.autoTable({
             head: headers,
             body: data,
@@ -122,7 +127,7 @@ const Patients = () => {
             },
             margin: { top: 20 },
         });
-    
+
         doc.save('patients_report.pdf');
     };
 
@@ -130,101 +135,122 @@ const Patients = () => {
         `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
+    const breadcrumbItems = [
+        { name: 'Patient Details', href: '/patients/home' }
+    ];
+
     return (
-        <div className="container mx-auto p-4">
-            <h1 className="text-3xl font-bold mb-6 text-center text-teal-600">Patient Details</h1>
-            {error && <p className="text-red-500">{error}</p>}
-            {loading ? (
-                <p className="text-center">Loading patients...</p>
-            ) : (
-                <>
-                    {!editMode && (
-                        <div className="flex flex-col md:flex-row justify-between mb-4">
-                            <div className="relative w-full md:w-1/3 mb-2 md:mb-0">
-                                <input
-                                    type="text"
-                                    placeholder="Search by name..."
-                                    className="border rounded-lg shadow-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-teal-500"
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                />
-                                <span className="absolute top-2 right-3 text-gray-500">
-                                    <FontAwesomeIcon icon={faSearch} />
-                                </span>
-                            </div>
-                            <button
-                                onClick={handleReport}
-                                className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg flex items-center shadow-lg transition duration-200"
-                            >
-                                <FontAwesomeIcon icon={faFileDownload} className="mr-2" />
-                                Generate PDF Report
-                            </button>
+        <SnackbarProvider>
+            <div className="flex flex-col min-h-screen">
+                <div className="sticky top-0 z-10">
+                    <Navbar />
+                </div>
+                <div className="flex flex-1">
+                    <div className="hidden sm:block w-1/6">
+                        <SideBar />
+                    </div>
+                    <div className="w-full sm:w-5/6 flex flex-col p-4 mt-1 sm:mt-0">
+                        <div className="flex flex-row items-center mb-4">
+                            <BackButton />
+                            <Breadcrumb items={breadcrumbItems} />
                         </div>
-                    )}
-                    {editMode ? (
-                        <PatientForm 
-                            patient={currentPatient}
-                            onUpdate={handleUpdate}
-                            onCancel={() => setEditMode(false)}
-                        />
-                    ) : (
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
-                                <thead className="bg-teal-600 text-white">
-                                    <tr>
-                                        <th className="py-3 px-4 border-b">First Name</th>
-                                        <th className="py-3 px-4 border-b">Last Name</th>
-                                        <th className="py-3 px-4 border-b">Date of Birth</th>
-                                        <th className="py-3 px-4 border-b">Gender</th>
-                                        <th className="py-3 px-4 border-b">Email</th>
-                                        <th className="py-3 px-4 border-b">Phone</th>
-                                        <th className="py-3 px-4 border-b">Address</th>
-                                        <th className="py-3 px-4 border-b">Insurance Number</th>
-                                        <th className="py-3 px-4 border-b">Physician</th>
-                                        <th className="py-3 px-4 border-b">Medical History</th>
-                                        <th className="py-3 px-4 border-b">Blood Type</th>
-                                        <th className="py-3 px-4 border-b">Emergency Contact</th>
-                                        <th className="py-3 px-4 border-b">Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-gray-100">
-                                    {filteredPatients.map(patient => (
-                                        <tr key={patient._id} className="hover:bg-teal-50 transition duration-200">
-                                            <td className="py-2 px-4 border-b">{patient.firstName}</td>
-                                            <td className="py-2 px-4 border-b">{patient.lastName}</td>
-                                            <td className="py-2 px-4 border-b">{patient.dateOfBirth}</td>
-                                            <td className="py-2 px-4 border-b">{patient.gender}</td>
-                                            <td className="py-2 px-4 border-b">{patient.email}</td>
-                                            <td className="py-2 px-4 border-b">{patient.phone}</td>
-                                            <td className="py-2 px-4 border-b">{patient.address}</td>
-                                            <td className="py-2 px-4 border-b">{patient.insuranceNumber}</td>
-                                            <td className="py-2 px-4 border-b">{patient.physician}</td>
-                                            <td className="py-2 px-4 border-b">{patient.medicalHistory}</td>
-                                            <td className="py-2 px-4 border-b">{patient.bloodType}</td>
-                                            <td className="py-2 px-4 border-b">{patient.emergencyContact}</td>
-                                            <td className="py-2 px-4 border-b flex space-x-2">
-                                                <button 
-                                                    className="text-teal-600 hover:text-teal-800"
-                                                    onClick={() => handleEdit(patient)}
-                                                >
-                                                    <FontAwesomeIcon icon={faEdit} />
-                                                </button>
-                                                <button 
-                                                    className="text-red-600 hover:text-red-800"
-                                                    onClick={() => handleDelete(patient._id)}
-                                                >
-                                                    <FontAwesomeIcon icon={faTrashAlt} />
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    )}
-                </>
-            )}
-        </div>
+
+                        <h1 className="text-3xl font-bold mb-6 text-center text-teal-600">Patient Details</h1>
+                        {error && <p className="text-red-500">{error}</p>}
+                        {loading ? (
+                            <p className="text-center">Loading patients...</p>
+                        ) : (
+                            <>
+                                {!editMode && (
+                                    <div className="flex flex-col md:flex-row justify-between mb-4">
+                                        <div className="relative w-full md:w-1/3 mb-2 md:mb-0">
+                                            <input
+                                                type="text"
+                                                placeholder="Search by name..."
+                                                className="border rounded-lg shadow-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                value={searchTerm}
+                                                onChange={(e) => setSearchTerm(e.target.value)}
+                                            />
+                                            <span className="absolute top-2 right-3 text-gray-500">
+                                                <FontAwesomeIcon icon={faSearch} />
+                                            </span>
+                                        </div>
+                                        <button
+                                            onClick={handleReport}
+                                            className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg flex items-center shadow-lg transition duration-200"
+                                        >
+                                            <FontAwesomeIcon icon={faFileDownload} className="mr-2" />
+                                            Generate PDF Report
+                                        </button>
+                                    </div>
+                                )}
+                                {editMode ? (
+                                    <PatientForm
+                                        patient={currentPatient}
+                                        onUpdate={handleUpdate}
+                                        onCancel={() => setEditMode(false)}
+                                    />
+                                ) : (
+                                    <div className="overflow-x-auto">
+                                        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
+                                            <thead className="bg-teal-600 text-white">
+                                            <tr>
+                                                <th className="py-3 px-4 border-b">First Name</th>
+                                                <th className="py-3 px-4 border-b">Last Name</th>
+                                                <th className="py-3 px-4 border-b">Date of Birth</th>
+                                                <th className="py-3 px-4 border-b">Gender</th>
+                                                <th className="py-3 px-4 border-b">Email</th>
+                                                <th className="py-3 px-4 border-b">Phone</th>
+                                                <th className="py-3 px-4 border-b">Address</th>
+                                                <th className="py-3 px-4 border-b">Insurance Number</th>
+                                                <th className="py-3 px-4 border-b">Physician</th>
+                                                <th className="py-3 px-4 border-b">Medical History</th>
+                                                <th className="py-3 px-4 border-b">Blood Type</th>
+                                                <th className="py-3 px-4 border-b">Emergency Contact</th>
+                                                <th className="py-3 px-4 border-b">Actions</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody className="bg-gray-100">
+                                            {filteredPatients.map(patient => (
+                                                <tr key={patient._id} className="hover:bg-teal-50 transition duration-200">
+                                                    <td className="py-2 px-4 border-b">{patient.firstName}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.lastName}</td>
+                                                    <td className="py-2 px-4 border-b">{new Date(patient.dateOfBirth).toLocaleDateString()}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.gender}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.email}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.phone}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.address}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.insuranceNumber}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.physician}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.medicalHistory}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.bloodType}</td>
+                                                    <td className="py-2 px-4 border-b">{patient.emergencyContact}</td>
+                                                    <td className="py-2 px-4 border-b">
+                                                        <button
+                                                            onClick={() => handleEdit(patient)}
+                                                            className="text-teal-600 hover:text-teal-500 transition duration-200"
+                                                        >
+                                                            <FontAwesomeIcon icon={faEdit} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(patient._id)}
+                                                            className="text-red-600 hover:text-red-500 ml-2 transition duration-200"
+                                                        >
+                                                            <FontAwesomeIcon icon={faTrashAlt} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </SnackbarProvider>
     );
 };
 
