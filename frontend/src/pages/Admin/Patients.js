@@ -141,12 +141,12 @@ const Patients = () => {
 
     return (
         <SnackbarProvider>
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col min-h-screen font-sans"> {/* Add modern font family */}
                 <div className="sticky top-0 z-10">
                     <Navbar />
                 </div>
                 <div className="flex flex-1">
-                    <div className="hidden sm:block w-1/6">
+                    <div className="hidden sm:block w-1/6 md:w-1/5 lg:w-1/4">
                         <SideBar />
                     </div>
                     <div className="w-full sm:w-5/6 flex flex-col p-4 mt-1 sm:mt-0">
@@ -163,11 +163,11 @@ const Patients = () => {
                             <>
                                 {!editMode && (
                                     <div className="flex flex-col md:flex-row justify-between mb-4">
-                                        <div className="relative w-full md:w-1/3 mb-2 md:mb-0">
+                                        <div className="relative w-full md:w-1/3 mb-3 ml-5 md:mb-0">
                                             <input
                                                 type="text"
                                                 placeholder="Search by name..."
-                                                className="border rounded-lg shadow-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-teal-500"
+                                                className="border rounded-lg shadow-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-teal-400 text-sm" // Use smaller font
                                                 value={searchTerm}
                                                 onChange={(e) => setSearchTerm(e.target.value)}
                                             />
@@ -177,7 +177,7 @@ const Patients = () => {
                                         </div>
                                         <button
                                             onClick={handleReport}
-                                            className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg flex items-center shadow-lg transition duration-200"
+                                            className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg flex items-center shadow-lg transition duration-200 text-sm" // Use smaller font
                                         >
                                             <FontAwesomeIcon icon={faFileDownload} className="mr-2" />
                                             Generate PDF Report
@@ -192,12 +192,12 @@ const Patients = () => {
                                     />
                                 ) : (
                                     <div className="overflow-x-auto">
-                                        <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
-                                            <thead className="bg-teal-600 text-white">
+                                        <table className="min-w-full bg-white border border-green-200 text-[13.3px]  "> {/* Set table font to smaller */}
+                                            <thead className="bg-gray-300 ">
                                             <tr>
                                                 <th className="py-3 px-4 border-b">First Name</th>
                                                 <th className="py-3 px-4 border-b">Last Name</th>
-                                                <th className="py-3 px-4 border-b">Date of Birth</th>
+                                                <th className="py-3 px-4 border-b">DOB</th>
                                                 <th className="py-3 px-4 border-b">Gender</th>
                                                 <th className="py-3 px-4 border-b">Email</th>
                                                 <th className="py-3 px-4 border-b">Phone</th>
@@ -210,37 +210,45 @@ const Patients = () => {
                                                 <th className="py-3 px-4 border-b">Actions</th>
                                             </tr>
                                             </thead>
-                                            <tbody className="bg-gray-100">
-                                            {filteredPatients.map(patient => (
-                                                <tr key={patient._id} className="hover:bg-teal-50 transition duration-200">
-                                                    <td className="py-2 px-4 border-b">{patient.firstName}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.lastName}</td>
-                                                    <td className="py-2 px-4 border-b">{new Date(patient.dateOfBirth).toLocaleDateString()}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.gender}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.email}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.phone}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.address}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.insuranceNumber}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.physician}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.medicalHistory}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.bloodType}</td>
-                                                    <td className="py-2 px-4 border-b">{patient.emergencyContact}</td>
-                                                    <td className="py-2 px-4 border-b">
-                                                        <button
-                                                            onClick={() => handleEdit(patient)}
-                                                            className="text-teal-600 hover:text-teal-500 transition duration-200"
-                                                        >
-                                                            <FontAwesomeIcon icon={faEdit} />
-                                                        </button>
-                                                        <button
-                                                            onClick={() => handleDelete(patient._id)}
-                                                            className="text-red-600 hover:text-red-500 ml-2 transition duration-200"
-                                                        >
-                                                            <FontAwesomeIcon icon={faTrashAlt} />
-                                                        </button>
-                                                    </td>
+                                            <tbody>
+                                            {filteredPatients.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="13" className="text-center py-4">No patients found.</td>
                                                 </tr>
-                                            ))}
+                                            ) : (
+                                                filteredPatients.map((patient) => (
+                                                    <tr key={patient._id}>
+                                                        <td className="py-2 px-4 border-b">{patient.firstName}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.lastName}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.dob}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.gender}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.email}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.phone}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.address}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.insuranceNumber}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.physician}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.medicalHistory}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.bloodType}</td>
+                                                        <td className="py-2 px-4 border-b">{patient.emergencyContact}</td>
+                                                        <td className="py-2 px-4 border-b">
+                                                            <div className="flex space-x-2">
+                                                                <button
+                                                                    onClick={() => handleEdit(patient)}
+                                                                    className="text-teal-600 hover:text-teal-500"
+                                                                >
+                                                                    <FontAwesomeIcon icon={faEdit} />
+                                                                </button>
+                                                                <button
+                                                                    onClick={() => handleDelete(patient._id)}
+                                                                    className="text-red-600 hover:text-red-500"
+                                                                >
+                                                                    <FontAwesomeIcon icon={faTrashAlt} />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            )}
                                             </tbody>
                                         </table>
                                     </div>
