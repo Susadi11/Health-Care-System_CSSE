@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 const AppointmentForm = ({ appointment, onUpdate, onCancel }) => {
   const [formData, setFormData] = useState({
     appointmentDate: "",
+    time: "",
     appointmentStatus: "",
     appointmentReason: "",
     location: "",
@@ -18,6 +19,7 @@ const AppointmentForm = ({ appointment, onUpdate, onCancel }) => {
     if (appointment) {
       setFormData({
         appointmentDate: appointment.appointmentDate.split("T")[0], // Format for input field
+        time: appointment.time || "",
         appointmentStatus: appointment.appointmentStatus,
         appointmentReason: appointment.appointmentReason,
         location: appointment.location,
@@ -92,6 +94,24 @@ const AppointmentForm = ({ appointment, onUpdate, onCancel }) => {
             <span className="text-red-500 text-sm">
               {errors.appointmentDate}
             </span>
+          )}
+        </div>
+        <div className="flex flex-col">
+          <label className="text-sm font-semibold text-gray-700 mb-1">
+            Time
+          </label>
+          <input
+            type="time"
+            name="time"
+            value={formData.time}
+            onChange={handleChange}
+            required
+            className={`mt-1 border ${
+              errors.time ? "border-red-500" : "border-green-500"
+            } rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+          />
+          {errors.time && (
+            <span className="text-red-500 text-sm">{errors.time}</span>
           )}
         </div>
         <div className="flex flex-col">

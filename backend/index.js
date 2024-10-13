@@ -5,6 +5,7 @@ import cors from "cors";
 import patientRoute from "./routes/Health_Card/patientRoute.js";
 import appointmentRoute from "./routes/appointmentRoute.js";
 import doctorRoute from "./routes/doctorRoute.js";
+import serviceRoute from "./routes/Health_Card/serviceRoute.js";
 
 const app = express();
 
@@ -32,6 +33,7 @@ app.use("/patientRoute", patientRoute);
 //tharushi
 app.use("/appointmentRoute", appointmentRoute);
 app.use("/doctorRoute", doctorRoute);
+app.use("/serviceRoute", serviceRoute);
 
 mongoose
   .connect(mongoDBURL)

@@ -16,6 +16,7 @@ router.post("/", async (req, res) => {
       patientId,
       doctorId,
       appointmentDate,
+      time,
       appointmentStatus,
       appointmentReason,
       location,
@@ -28,6 +29,7 @@ router.post("/", async (req, res) => {
       !patientId ||
       !doctorId ||
       !appointmentDate ||
+      !time ||
       !appointmentStatus ||
       !appointmentReason ||
       !location ||
@@ -44,6 +46,7 @@ router.post("/", async (req, res) => {
       patientId,
       doctorId,
       appointmentDate,
+      time,
       appointmentStatus,
       appointmentReason,
       location,
