@@ -3,8 +3,12 @@ import { PORT, mongoDBURL } from "./config.js";
 import mongoose from "mongoose";
 import cors from "cors";
 import patientRoute from "./routes/Health_Card/patientRoute.js";
+ 
 import appointmentRoute from "./routes/appointmentRoute.js";
 import doctorRoute from "./routes/doctorRoute.js";
+ 
+import paymentRoute from "./routes/Payment/paymentRoute.js";
+ 
 
 const app = express();
 
@@ -26,8 +30,12 @@ app.get("/", (request, response) => {
   console.log(request);
   return response.status(234).send("welcome to CARENET");
 });
+ 
+ 
+app.use('/patientRoute', patientRoute);
+app.use('/paymentRoute', paymentRoute);
 
-app.use("/patientRoute", patientRoute);
+ 
 
 //tharushi
 app.use("/appointmentRoute", appointmentRoute);
