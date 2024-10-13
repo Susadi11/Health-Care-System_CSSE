@@ -10,6 +10,7 @@ import Navbar from '../../components/utility/Navbar';
 import Breadcrumb from '../../components/utility/Breadcrumbs';
 import BackButton from '../../components/utility/BackButton';
 
+
 const Patients = () => {
     const [patients, setPatients] = useState([]);
     const [error, setError] = useState(null);
@@ -82,17 +83,22 @@ const Patients = () => {
     };
 
     const handleReport = () => {
-        const doc = new jsPDF('p', 'mm', 'a4');
-
+        const doc = new jsPDF('p', 'mm', [297, 420]);
+    
+        // Set the title for the report
         doc.setFontSize(18);
         doc.text('Patients Report', doc.internal.pageSize.getWidth() / 2, 13, { align: 'center' });
-
+    
+        // Table headers
         const headers = [
-            ['First Name', 'Phone', 'Address', 'Insurance Number', 'Physician', 'Medical History', 'Blood Type', 'Emergency Contact']
+            ['Id', 'First Name','Last Name','Phone', 'Address', 'Insurance Number', 'Physician', 'Medical History', 'Blood Type', 'Emergency Contact']
         ];
-
+    
+        // Table data
         const data = patients.map(patient => [
+            patient.U_id || '',
             patient.firstName || '',
+            patient.lastName || '',
             patient.phone || '',
             patient.address || '',
             patient.insuranceNumber || '',
@@ -101,7 +107,13 @@ const Patients = () => {
             patient.bloodType || '',
             doc.splitTextToSize(patient.emergencyContact || '', 50)
         ]);
-
+    
+        // AutoTable configuration
+        const tableWidth = 250; // Approximate table width (adjust as necessary)
+        const pageWidth = doc.internal.pageSize.getWidth(); // Get page width
+        const marginLeft = (pageWidth - tableWidth) / 2; // Calculate left margin to center the table
+    
+        // Generate the table
         doc.autoTable({
             head: headers,
             body: data,
@@ -112,24 +124,28 @@ const Patients = () => {
                 cellPadding: 3,
             },
             columnStyles: {
-                0: { cellWidth: 18 },
-                1: { cellWidth: 26 },
-                2: { cellWidth: 30 },
-                3: { cellWidth: 25 },
-                4: { cellWidth: 20 },
-                5: { cellWidth: 29 },
-                6: { cellWidth: 15 },
-                7: { cellWidth: 25 },
+                0: { cellWidth: 35 },
+                1: { cellWidth: 18 },
+                2: { cellWidth: 18 },
+                3: { cellWidth: 26 },
+                4: { cellWidth: 30 },
+                5: { cellWidth: 26 },
+                6: { cellWidth: 25 },
+                7: { cellWidth: 30 },
+                8: { cellWidth: 15 },
+                9: { cellWidth: 25 },
             },
             headStyles: {
-                fillColor: [52, 152, 219], // Updated header color to a blue shade
-                textColor: [255, 255, 255],
+                fillColor: [52, 152, 219], // Blue header color
+                textColor: [255, 255, 255], // White text color
             },
-            margin: { top: 20 },
+            margin: { top: 20, left: marginLeft }, // Set calculated left margin to center the table
         });
-
+    
+        // Save the PDF
         doc.save('patients_report.pdf');
     };
+    
 
     const filteredPatients = patients.filter(patient =>
         `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -195,6 +211,7 @@ const Patients = () => {
                                         <table className="min-w-full bg-white border border-green-200 text-[13.3px]  "> {/* Set table font to smaller */}
                                             <thead className="bg-gray-300 ">
                                             <tr>
+                                            <th className="py-3 px-4 border-b">Id</th>
                                                 <th className="py-3 px-4 border-b">First Name</th>
                                                 <th className="py-3 px-4 border-b">Last Name</th>
                                                 <th className="py-3 px-4 border-b">DOB</th>
@@ -218,6 +235,7 @@ const Patients = () => {
                                             ) : (
                                                 filteredPatients.map((patient) => (
                                                     <tr key={patient._id}>
+                                                        <td className="py-2 px-4 border-b">{patient.U_id}</td>
                                                         <td className="py-2 px-4 border-b">{patient.firstName}</td>
                                                         <td className="py-2 px-4 border-b">{patient.lastName}</td>
                                                         <td className="py-2 px-4 border-b">{patient.dob}</td>
