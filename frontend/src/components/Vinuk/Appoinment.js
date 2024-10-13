@@ -1,8 +1,27 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from "chart.js";
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler,
+} from "chart.js";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  Filler
+);
 
 const Appointment = () => {
   const sampleData = [43, 40, 50, 40, 70, 40, 45, 33, 40, 60, 40, 50, 36];
@@ -14,7 +33,7 @@ const Appointment = () => {
         borderColor: "navy",
         pointRadius: 0,
         fill: true,
-        backgroundColor: 'yellow',
+        backgroundColor: "yellow",
         lineTension: 0.4,
         data: sampleData,
         borderWidth: 1,
@@ -68,17 +87,10 @@ const Appointment = () => {
     },
   };
 
-  const graphStyle = {
-    minHeight: "10rem",
-    maxWidth: "540px",
-    width: "100%",
-    border: "1px solid #C4C4C4",
-    borderRadius: "0.375rem",
-    padding: "0.5rem",
-  };
-
   return (
-    <div style={graphStyle}>
+    <div
+      className="min-h-40 max-w-md w-full border border-gray-400 rounded-md p-2"
+    >
       <Line id="home" options={options} data={canvasData} />
     </div>
   );
