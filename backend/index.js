@@ -7,8 +7,11 @@ import patientRoute from "./routes/Health_Card/patientRoute.js";
 import appointmentRoute from "./routes/appointmentRoute.js";
 import doctorRoute from "./routes/doctorRoute.js";
  
+import serviceRoute from "./routes/Health_Card/serviceRoute.js";
+ 
 import paymentRoute from "./routes/Payment/paymentRoute.js";
  
+
 
 const app = express();
 
@@ -40,6 +43,7 @@ app.use('/paymentRoute', paymentRoute);
 //tharushi
 app.use("/appointmentRoute", appointmentRoute);
 app.use("/doctorRoute", doctorRoute);
+app.use("/serviceRoute", serviceRoute);
 
 mongoose
   .connect(mongoDBURL)

@@ -14,6 +14,7 @@ import Navbar from "../components/utility/Navbar";
 import Breadcrumb from "../components/utility/Breadcrumbs";
 import BackButton from "../components/utility/BackButton";
 import AppointmentForm from "../components/Tharushi/AppointmentForm";
+import { useNavigate } from "react-router-dom";
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
@@ -22,6 +23,8 @@ const Appointments = () => {
   const [editMode, setEditMode] = useState(false);
   const [currentAppointment, setCurrentAppointment] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -115,6 +118,7 @@ const Appointments = () => {
     const headers = [
       [
         "Appointment Date",
+        "Time",
         "Status",
         "Reason",
         "Location",
@@ -127,6 +131,7 @@ const Appointments = () => {
 
     const data = appointments.map((appointment) => [
       appointment.appointmentDate || "",
+      appointment.time || "",
       appointment.appointmentStatus || "",
       appointment.appointmentReason || "",
       appointment.location || "",
@@ -157,6 +162,7 @@ const Appointments = () => {
         5: { cellWidth: 25 },
         6: { cellWidth: 20 },
         7: { cellWidth: 40 },
+        8: { cellWidth: 20 },
       },
       headStyles: {
         fillColor: [52, 152, 219], // Updated header color to a blue shade
@@ -180,6 +186,9 @@ const Appointments = () => {
     { name: "Appointments", href: "/appointments/home" },
   ];
 
+  const navigateToService = () => {
+    navigate("/services");
+  };
   return (
     <SnackbarProvider>
       <div className="flex flex-col min-h-screen font-sans">
@@ -227,6 +236,12 @@ const Appointments = () => {
                       <FontAwesomeIcon icon={faFileDownload} className="mr-2" />
                       Generate PDF Report
                     </button>
+                    <button
+                      onClick={navigateToService}
+                      className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow-lg transition duration-200 text-sm"
+                    >
+                      Go to Service Page
+                    </button>
                   </div>
                 )}
                 {editMode ? (
@@ -243,6 +258,7 @@ const Appointments = () => {
                           <th className="py-3 px-4 border-b">
                             Appointment Date
                           </th>
+                          <th className="py-3 px-4 border-b">Time</th>
                           <th className="py-3 px-4 border-b">Status</th>
                           <th className="py-3 px-4 border-b">Reason</th>
                           <th className="py-3 px-4 border-b">Location</th>
@@ -264,6 +280,9 @@ const Appointments = () => {
                             <tr key={appointment._id}>
                               <td className="py-2 px-4 border-b">
                                 {appointment.appointmentDate}
+                              </td>
+                              <td className="py-2 px-4 border-b">
+                                {appointment.time}
                               </td>
                               <td className="py-2 px-4 border-b">
                                 {appointment.appointmentStatus}
