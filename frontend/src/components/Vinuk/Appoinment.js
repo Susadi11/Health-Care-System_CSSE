@@ -36,9 +36,14 @@ const AppointmentChart = () => {
             {
               label: "Number of Appointments",
               data: data,
-              borderColor: "blue",
-              fill: false,
-              tension: 0.4,
+              borderColor: "#3b82f6", // Tailwind's blue-500 color
+              backgroundColor: "rgba(59, 130, 246, 0.2)", // Slight background fill
+              pointBackgroundColor: "#3b82f6", // Blue points
+              pointBorderColor: "#fff",
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              borderWidth: 2,
+              tension: 0.3, // Smooth curve
             },
           ],
         });
@@ -65,29 +70,63 @@ const AppointmentChart = () => {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Allow custom height and width
     scales: {
       x: {
         title: {
           display: true,
           text: "Hour of the Day",
+          font: { size: 16, weight: "bold" },
+          color: "#1f2937", // Tailwind's gray-800 color
+        },
+        grid: {
+          display: false, // Remove vertical grid lines
+        },
+        ticks: {
+          color: "#1f2937", // Tailwind's gray-800 color
         },
       },
       y: {
         title: {
           display: true,
           text: "Number of Appointments",
+          font: { size: 16, weight: "bold" },
+          color: "#1f2937", // Tailwind's gray-800 color
+        },
+        grid: {
+          color: "rgba(0, 0, 0, 0.1)", // Light grid lines for Y-axis
         },
         ticks: {
-          stepSize: 1, // Customize this if needed
+          stepSize: 1,
+          color: "#1f2937", // Tailwind's gray-800 color
         },
+      },
+    },
+    plugins: {
+      legend: {
+        display: true,
+        position: "top",
+        labels: {
+          font: { size: 14 },
+          color: "#1f2937", // Tailwind's gray-800 color
+        },
+      },
+      tooltip: {
+        backgroundColor: "#3b82f6", // Tailwind's blue-500 color
+        titleColor: "#fff",
+        bodyColor: "#fff",
+        padding: 10,
+        cornerRadius: 8,
       },
     },
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
-      <h2 className="text-center text-2xl font-bold mb-4">Appointments by Hour</h2>
-      <Line data={chartData} options={options} />
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      <h2 className="text-center text-3xl font-bold text-gray-800 mb-6">Appointments by Hour</h2>
+      <div className="h-[500px]">
+        <Line data={chartData} options={options} />
+      </div>
     </div>
   );
 };
