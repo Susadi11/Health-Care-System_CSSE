@@ -26,7 +26,7 @@ const PaymentPage = () => {
         };
 
         try {
-            const response = await fetch('http://localhost:5555/paymentRoute/payment', {
+            const response = await fetch('https://health-care-system-csse.vercel.app/paymentRoute/payment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

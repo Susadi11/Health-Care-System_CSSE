@@ -23,7 +23,7 @@ const Patients = () => {
         const fetchPatients = async () => {
             setLoading(true);
             try {
-                const response = await fetch('http://localhost:5555/patientRoute/patients');
+                const response = await fetch('https://health-care-system-csse.vercel.app/patientRoute/patients');
                 if (!response.ok) throw new Error('Failed to fetch patients');
                 const data = await response.json();
                 setPatients(data);
