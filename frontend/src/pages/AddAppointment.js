@@ -260,6 +260,7 @@ const AddAppointment = () => {
             <div className="flex flex-col md:flex-row justify-between mt-4">
               <button
                 type="submit"
+                onClick={() => navigate("/PaymentPage")}
                 className="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-200"
               >
                 Add Appointment

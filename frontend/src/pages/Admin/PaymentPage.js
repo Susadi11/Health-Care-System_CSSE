@@ -16,6 +16,9 @@ const PaymentPage = () => {
     const handlePayment = async (e) => {
         e.preventDefault();
 
+        // Get the current date and time
+        const paymentDate = new Date().toISOString(); // Use ISO format to store date and time in MongoDB
+
         const paymentData = {
             paymentMethod,
             name,
@@ -23,6 +26,7 @@ const PaymentPage = () => {
             expiryMonth,
             expiryYear,
             securityCode,
+            paymentDate, // Add payment date to the data being sent to the server
         };
 
         try {
@@ -68,16 +72,14 @@ const PaymentPage = () => {
                     <div className="hidden sm:block w-1/6 md:w-1/5 lg:w-1/4">
                         <SideBar />
                     </div>
-                    <div className="w-full  ">
-                        <div className="flex flex-row items-center mb-3">
+                    <div className="w-full">
+                        <div className="flex flex-row items-center mb-0">
                             <BackButton />
                             <Breadcrumb items={breadcrumbItems} />
                         </div>
-                        <div className="min-w-screen min-h-screen   justify-center px-5  pt-0 border-black">
+                        <div className="min-w-screen min-h-screen justify-center px-5 pt-0 border-black">
                             <div className="w-full mx-auto rounded-lg bg-white border-black shadow-lg p-5" style={{ maxWidth: '600px', marginLeft: 'auto', marginRight: 'auto' }}>
-                                <div className="w-full pt-1 pb-5 ">
-                                    
-                                </div>
+                                <div className="w-full pt-1 pb-5"></div>
                                 <div className="mb-8">
                                     <h1 className="text-center font-bold text-xl uppercase">Secure Payment Info</h1>
                                 </div>
@@ -165,8 +167,8 @@ const PaymentPage = () => {
                                         </div>
                                     </div>
                                     {/* Security Code */}
-                                    <div className="mb-10">
-                                        <label className="font-bold text-sm mb-2 ml-1">Security Code</label>
+                                    <div className="mb-5">
+                                        <label className="font-bold text-sm mb-0 ml-1">Security Code</label>
                                         <input
                                             className="w-32 px-3 py-2 mb-1 border-2 border-gray-200 rounded-md focus:outline-none focus:border-indigo-500 transition-colors"
                                             placeholder="000"
@@ -178,7 +180,7 @@ const PaymentPage = () => {
                                     </div>
                                     {/* Payment Button */}
                                     <div>
-                                        <button className="block w-full max-w-xs mx-auto bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-3 py-3 font-semibold">
+                                    <button className="block w-full bg-indigo-500 hover:bg-indigo-700 focus:bg-indigo-700 text-white rounded-lg px-4 py-3 font-semibold transition duration-300">
                                             <i className="mdi mdi-lock-outline mr-1"></i> PAY NOW
                                         </button>
                                     </div>

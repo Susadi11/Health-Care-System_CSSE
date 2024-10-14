@@ -36,16 +36,15 @@ router.post('/payment', async (req, res) => {
     }
 });
 
-// Route to get all patients
-router.get('/pay', async (req, res) => {
+// Route to fetch all payment details
+router.get('/payments', async (req, res) => {
     try {
-        const payments = await Payment.find(); // Fetch all patients from MongoDB
-        res.json(payments);
+        const payments = await Payment.find(); // Fetch all payments from MongoDB
+        res.status(200).json(payments); // Send payments as JSON response
     } catch (error) {
-        console.error('Error fetching paymentss:', error);
-        res.status(500).json({ message: 'Server error' });
+        console.error('Error fetching payments:', error);
+        res.status(500).json({ message: 'Error retrieving payments' });
     }
 });
-
 
 export default router;
