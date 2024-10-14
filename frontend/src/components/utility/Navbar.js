@@ -36,7 +36,7 @@ export default function Navbar() {
                     </Link>
  
                     <Link to="/serviceView" className="nav-item">
-                        <div className="h-full font-medium px-6 rounded-full transition-all duration-200 hover:bg-lime-200">
+                        <div className="h-full font-medium px-6 rounded-full transition-all duration-200 hover:bg-blue-200">
  
                             Services
                         </div>
