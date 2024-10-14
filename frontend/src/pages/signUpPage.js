@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+// Import Firebase Auth from the correct file path
+import { auth } from '../firebaseConfig'; // Adjust the path to where firebaseConfig.js is located
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig'; // Update the path to firebaseConfig.js
+
 
 const SignUpPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const navigate = useNavigate(); // Initialize the useNavigate hook
 
     const handleSignUp = (e) => {
         e.preventDefault();
@@ -15,7 +18,8 @@ const SignUpPage = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log('Signed up user:', userCredential.user);
-                // Redirect or perform additional actions after signup
+                // Navigate to the register page after signup
+                navigate('/signup/register');
             })
             .catch((error) => {
                 console.error('Error signing up:', error);
