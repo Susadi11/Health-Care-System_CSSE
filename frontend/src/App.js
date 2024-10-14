@@ -39,6 +39,7 @@ export default function App() {
         <Route path="/generate-qr/:id" element={<GenerateQR />} />
         <Route path="/appointments/home" element={<Appointments />} />
         <Route path="/services/home" element={<Services />} />
+        <Route path="/generate-qr/:id" element={<GenerateQR />} />
       </Routes>
     </div>
   );
