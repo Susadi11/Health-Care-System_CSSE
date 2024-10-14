@@ -97,8 +97,8 @@ const options = {
 
 const PatientFlowWeeklyBarChart = () => {
   const graphStyle = {
-    minHeight: '400px',
-    maxWidth: '800px',
+    minHeight: '700px',
+    maxWidth: '900px',
     margin: '0 auto',
     padding: '1rem',
     border: '1px solid #e5e7eb',
