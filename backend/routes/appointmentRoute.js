@@ -8,50 +8,51 @@ const router = express.Router();
 // Enable CORS for all routes
 router.use(cors());
 
+// Generate a random 4-character appointmentId
+const generateAppointmentId = () => {
+  return Math.random().toString(36).substring(2, 6).toUpperCase();
+};
+
 // Create a new appointment
 router.post("/", async (req, res) => {
   try {
     const {
-      appointmentId,
-      patientId,
       doctorId,
       appointmentDate,
       time,
-      appointmentStatus,
       appointmentReason,
       location,
       notes,
-      paymentStatus,
     } = req.body;
 
     // Check if all required fields are present
     if (
-      !patientId ||
       !doctorId ||
       !appointmentDate ||
       !time ||
-      !appointmentStatus ||
       !appointmentReason ||
-      !location ||
-      !paymentStatus
+      !location
     ) {
       return res.status(400).json({
         message: "All required fields must be provided",
       });
     }
 
+    // Generate a unique appointmentId
+    const appointmentId = generateAppointmentId();
+
     // Create a new appointment
     const newAppointment = await Appointment.create({
       appointmentId,
-      patientId,
+      patientId: "670bae0072bb3d59f7c45b9e", // Fixed patientId for now
       doctorId,
       appointmentDate,
       time,
-      appointmentStatus,
+      appointmentStatus: "Scheduled", // Default value
       appointmentReason,
       location,
       notes,
-      paymentStatus,
+      paymentStatus: "Pending", // Default value
     });
 
     // Return newly created appointment

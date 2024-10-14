@@ -20,7 +20,7 @@ const AppointmentChart = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await fetch("http://localhost:5555/appointmentRoute/appointments");
+        const response = await fetch("https://health-care-system-csse.vercel.app/appointmentRoute/appointments");
         const appointments = await response.json();
 
         // Step 2: Process the data to group by hour (using the `time` field)
