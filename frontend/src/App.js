@@ -12,6 +12,7 @@ import GenerateQR from "./pages/HealthCard_Pages/GenerateQR";
 
 import Appointments from "./pages/Appointments";
 import Services from "./pages/Services";
+import ProfilePage from "./pages/ProfilePage";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -31,6 +32,7 @@ export default function App() {
         {/* Dashboard route */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/QR_Scanner/home" element={<QR_Page />} />
         <Route path="/signup/register" element={<RegPage />} />{" "}

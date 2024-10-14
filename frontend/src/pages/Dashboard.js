@@ -44,7 +44,6 @@ export default function Dashboard() {
                             <div>
                                 <Appointment />
                                 <UserFlowChart />
-                                
                             </div>
                             
                             <div className="p-4">
