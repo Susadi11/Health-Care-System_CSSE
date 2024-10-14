@@ -121,9 +121,23 @@ const AppointmentChart = () => {
     },
   };
 
+  const graphStyle = {
+    minHeight: "500px",
+    maxWidth: "900px",
+    margin: "0 auto",
+    padding: "1rem",
+    border: "1px solid #e5e7eb",
+    borderRadius: "0.5rem",
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 8px 24px rgba(0, 0, 0, 0.1)", // Subtle shadow
+    transition: "transform 0.3s ease-in-out", // Smooth transition effect
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-center text-3xl font-bold text-gray-800 mb-6">Appointments by Hour</h2>
+    <div className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out" style={graphStyle}>
+      <h2 className="text-center text-3xl font-bold text-gray-800 mb-6">
+        Appointments by Hour
+      </h2>
       <div className="h-[500px]">
         <Line data={chartData} options={options} />
       </div>

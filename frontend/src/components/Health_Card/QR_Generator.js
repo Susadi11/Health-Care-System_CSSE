@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import { FiDownload } from 'react-icons/fi'; // For download icon
+import { FiDownload } from 'react-icons/fi';
 
 const QR_Generator = () => {
     const [formData, setFormData] = useState({
@@ -21,7 +21,7 @@ const QR_Generator = () => {
     });
 
     const [generatedId, setGeneratedId] = useState('');
-    const qrRef = useRef(); // To reference the QR code element
+    const qrRef = useRef();
     const navigate = useNavigate();
 
     const handleChange = (e) => {
@@ -55,173 +55,243 @@ const QR_Generator = () => {
             alert('An error occurred while registering the patient.');
         }
     };
+
     return (
-        <div className="bg-white flex flex-col lg:flex-row items-start justify-center gap-6">
-            {/* Left Card: Registration Form */}
-            <div className="bg-white shadow-lg rounded-lg p-4 w-full lg:w-3/5">
-                <h1 className="text-2xl font-bold text-center text-green-600 mb-4">Patient Registration</h1>
-                <form className="grid grid-cols-1 md:grid-cols-2 gap-4" onSubmit={handleSubmit}>
+        <div className="pt-2">
+            <div className="flex flex-col ml-64 mt-6">
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+                    Patient Registration
+                </h1>
+            </div>
+            <form className="flex flex-col items-center justify-center" onSubmit={handleSubmit}>
+                <div className="space-y-12 px-0 py-16 w-6/12 ml-1">
+                    <div className="border-b border-gray-900/10 pb-12">
+                        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                            <div className="col-span-full">
+                                <label htmlFor="firstName"
+                                       className="block text-sm font-medium leading-6 text-gray-900">
+                                    First Name
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        id="firstName"
+                                        value={formData.firstName}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="sm:col-span-3">
+                                <label htmlFor="lastName"
+                                       className="block text-sm font-medium leading-6 text-gray-900">
+                                    Last Name
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        name="lastName"
+                                        id="lastName"
+                                        value={formData.lastName}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        required
+                                    />
+                                </div>
+                            </div>
 
-                    {/* Personal Information */}
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">First Name</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="text"
-                            name="firstName"
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            placeholder="John"
-                        />
+                            <div className="sm:col-span-3">
+                                <label htmlFor="dob"
+                                       className="block text-sm font-medium leading-6 text-gray-900">
+                                    Date of Birth
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="date"
+                                        name="dob"
+                                        id="dob"
+                                        value={formData.dob}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="col-span-full">
+                                <label htmlFor="gender" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Gender
+                                </label>
+                                <select
+                                    name="gender"
+                                    id="gender"
+                                    value={formData.gender}
+                                    onChange={handleChange}
+                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+
+                            <div className="sm:col-span-3">
+                                <label htmlFor="email"
+                                       className="block text-sm font-medium leading-6 text-gray-900">
+                                    Email
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="sm:col-span-3">
+                                <label htmlFor="phone"
+                                       className="block text-sm font-medium leading-6 text-gray-900">
+                                    Phone Number
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="tel"
+                                        name="phone"
+                                        id="phone"
+                                        value={formData.phone}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-span-full">
+                                <label htmlFor="address" className="block text-sm font-medium leading-6 text-gray-900">
+                                    Address
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        id="address"
+                                        value={formData.address}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-span-full">
+                                <label htmlFor="insuranceNumber"
+                                       className="block text-sm font-medium leading-6 text-gray-900">
+                                    Health Insurance Number
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        name="insuranceNumber"
+                                        id="insuranceNumber"
+                                        value={formData.insuranceNumber}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="col-span-full">
+                                <label htmlFor="physician"
+                                       className="block text-sm font-medium leading-6 text-gray-900">
+                                    Primary Care Physician
+                                </label>
+                                <div className="mt-2">
+                                    <input
+                                        type="text"
+                                        name="physician"
+                                        id="physician"
+                                        value={formData.physician}
+                                        onChange={handleChange}
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+
+                            <div className="col-span-full">
+                                <label htmlFor="medicalHistory"
+                                       className="block text-sm font-medium leading-6 text-gray-900">
+                                    Medical History
+                                </label>
+                                <div className="mt-2">
+                                    <textarea
+                                        name="medicalHistory"
+                                        id="medicalHistory"
+                                        value={formData.medicalHistory}
+                                        onChange={handleChange}
+                                        rows="3"
+                                        className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-span-full">
+                        <label htmlFor="bloodType" className="block text-sm font-medium leading-6 text-gray-900">
+                            Blood Type
+                        </label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                name="bloodType"
+                                id="bloodType"
+                                value={formData.bloodType}
+                                onChange={handleChange}
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div className="col-span-full">
+                        <label htmlFor="emergencyContact" className="block text-sm font-medium leading-6 text-gray-900">
+                            Emergency Contact
+                        </label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                name="emergencyContact"
+                                id="emergencyContact"
+                                value={formData.emergencyContact}
+                                onChange={handleChange}
+                                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+                                required
+                            />
+                        </div>
                     </div>
 
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Last Name</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="text"
-                            name="lastName"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            placeholder="Doe"
-                        />
-                    </div>
 
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Date of Birth</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="date"
-                            name="dob"
-                            value={formData.dob}
-                            onChange={handleChange}
-                        />
-                    </div>
+                    <div className="mt-6 flex items-center justify-end gap-x-6">
+                        <button
+                            type="button"
+                            className="rounded-full bg-gray-300 px-4 py-1 hover:bg-gray-400 text-sm font-semibold  text-gray-900"
 
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Gender</label>
-                        <select
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            name="gender"
-                            value={formData.gender}
-                            onChange={handleChange}
                         >
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </div>
-
-                    {/* Contact Information */}
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="johndoe@example.com"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Phone Number</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="tel"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            placeholder="123-456-7890"
-                        />
-                    </div>
-
-                    <div className="col-span-1 md:col-span-2">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Address</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="text"
-                            name="address"
-                            value={formData.address}
-                            onChange={handleChange}
-                            placeholder="123 Main St, City, State, ZIP"
-                        />
-                    </div>
-
-                    {/* Medical Information */}
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Health Insurance Number</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="text"
-                            name="insuranceNumber"
-                            value={formData.insuranceNumber}
-                            onChange={handleChange}
-                            placeholder="1234567890"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Primary Care Physician</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="text"
-                            name="physician"
-                            value={formData.physician}
-                            onChange={handleChange}
-                            placeholder="Dr. Jane Smith"
-                        />
-                    </div>
-
-                    <div className="col-span-1 md:col-span-2">
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Medical History</label>
-                        <textarea
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            name="medicalHistory"
-                            value={formData.medicalHistory}
-                            onChange={handleChange}
-                            placeholder="e.g., Allergies, Chronic illnesses"
-                            rows="3"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Blood Type</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="text"
-                            name="bloodType"
-                            value={formData.bloodType}
-                            onChange={handleChange}
-                            placeholder="O+, A-, B+, etc."
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 text-sm font-bold mb-2">Emergency Contact</label>
-                        <input
-                            className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:ring focus:ring-green-200"
-                            type="text"
-                            name="emergencyContact"
-                            value={formData.emergencyContact}
-                            onChange={handleChange}
-                            placeholder="Name, Relationship, Phone"
-                        />
-                    </div>
-
-                    {/* Register Button */}
-                    <div className="col-span-1 md:col-span-2">
+                            Cancel
+                        </button>
                         <button
                             type="submit"
-                            className="bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 transition duration-200 w-full"
+                            className="rounded-full bg-blue-200 px-4 py-1 text-sm font-semibold text-gray-900 shadow-sm hover:bg-blue-300"
                         >
                             Register
                         </button>
                     </div>
-                </form>
-            </div>
-
+                </div>
+            </form>
         </div>
     );
 };
