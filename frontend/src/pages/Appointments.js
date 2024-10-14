@@ -31,7 +31,7 @@ const Appointments = () => {
       setLoading(true);
       try {
         const response = await fetch(
-          "http://localhost:5555/appointmentRoute/appointments"
+          "https://health-care-system-csse.vercel.app/appointmentRoute/appointments"
         );
         if (!response.ok) throw new Error("Failed to fetch appointments");
         const data = await response.json();
