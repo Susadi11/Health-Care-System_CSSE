@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SnackbarProvider } from "notistack";
+import { useNavigate } from "react-router-dom"; // Import useNavigate hook
 import SideBar from "../components/SideBar";
 import Navbar from "../components/utility/Navbar";
 import BackButton from "../components/utility/BackButton";
@@ -10,6 +11,7 @@ import UserFlowChart from "../components/Vinuk/UserFlowChart";
 export default function Dashboard() {
     const [loading, setLoading] = useState(false);
     const [currentTile, setCurrentTile] = useState(1);
+    const navigate = useNavigate(); // Initialize useNavigate hook
 
     const breadcrumbItems = [{ name: "Home", href: "/dashboard" }];
 
@@ -35,15 +37,26 @@ export default function Dashboard() {
                     </div>
 
                     {/* Main Content */}
-                    <div className="w-full col-span-5 flex flex-col px-10">
+                    <div className="w-full col-span-5 flex flex-col px-10 relative">
                         <div className="flex flex-row items-center mb-6">
                             <BackButton />
                             <Breadcrumb items={breadcrumbItems} />
                         </div>
 
+                        {/* Doctors Button */}
+                        <div className="absolute top-0 right-10 mt-4">
+                            <button
+                                className="text-white font-semibold py-2 px-4 rounded-lg hover:brightness-110 transition"
+                                style={{ backgroundColor: "#70bf56" }}
+                                onClick={() => navigate("/DoctorsNames")} // Navigate to DoctorsNames route
+                            >
+                                Doctors
+                            </button>
+                        </div>
+
                         {/* Title Section */}
                         <div className="text-center mb-12">
-                            <h1 className="text-6xl font-bold text-gray-800">
+                            <h1 className="text-5xl font-bold text-gray-800">
                                 CARENET ANALYTICS
                             </h1>
                         </div>
