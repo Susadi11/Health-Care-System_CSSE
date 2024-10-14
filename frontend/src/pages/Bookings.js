@@ -6,8 +6,6 @@ import {
   faSearch,
   faFileDownload,
 } from "@fortawesome/free-solid-svg-icons";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
 import { SnackbarProvider } from "notistack";
 import SideBar from "../components/SideBar";
 import Navbar from "../components/utility/Navbar";
@@ -16,9 +14,9 @@ import BackButton from "../components/utility/BackButton";
 import AppointmentForm from "../components/Tharushi/AppointmentForm";
 import { useNavigate } from "react-router-dom";
 
-const Appointments = () => {
+const Bookings = () => {
   const [appointments, setAppointments] = useState([]);
-  const [doctors, setDoctors] = useState([]);
+  const [doctors, setDoctors] = useState([]); // Hold doctors data
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
@@ -27,7 +25,6 @@ const Appointments = () => {
 
   const navigate = useNavigate();
 
-  // Fetch appointments and doctors when the component loads
   useEffect(() => {
     const fetchAppointments = async () => {
       setLoading(true);
@@ -35,12 +32,12 @@ const Appointments = () => {
         const response = await fetch(
           "https://health-care-system-csse.vercel.app/appointmentRoute/appointments"
         );
-        if (!response.ok) throw new Error("Failed to fetch appointments");
+        if (!response.ok) throw new Error("Failed to fetch bookings");
         const data = await response.json();
         setAppointments(data);
       } catch (error) {
-        console.error("Error fetching appointments:", error);
-        setError("Failed to fetch appointments. Please try again.");
+        console.error("Error fetching bookings:", error);
+        setError("Failed to fetch bookings. Please try again.");
       } finally {
         setLoading(false);
       }
@@ -51,7 +48,7 @@ const Appointments = () => {
         const response = await fetch("http://localhost:5555/doctorRoute/");
         if (!response.ok) throw new Error("Failed to fetch doctors");
         const data = await response.json();
-        setDoctors(data);
+        setDoctors(data); // Set fetched doctors to state
       } catch (error) {
         console.error("Error fetching doctors:", error);
       }
@@ -68,7 +65,7 @@ const Appointments = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this appointment?")) {
+    if (window.confirm("Are you sure you want to delete this booking?")) {
       try {
         const response = await fetch(
           `http://localhost:5555/appointmentRoute/appointments/${id}`,
@@ -76,121 +73,17 @@ const Appointments = () => {
             method: "DELETE",
           }
         );
-        if (!response.ok) throw new Error("Failed to delete the appointment");
+        if (!response.ok) throw new Error("Failed to delete the booking");
         setAppointments((prevAppointments) =>
           prevAppointments.filter((appointment) => appointment._id !== id)
         );
       } catch (error) {
-        console.error("Error deleting appointment:", error);
+        console.error("Error deleting booking:", error);
         setError(
-          "An error occurred while deleting the appointment. Please try again."
+          "An error occurred while deleting the booking. Please try again."
         );
       }
     }
-  };
-
-  const handleEdit = (appointment) => {
-    setEditMode(true);
-    setCurrentAppointment(appointment);
-  };
-
-  const handleUpdate = async (updatedData) => {
-    try {
-      const response = await fetch(
-        `http://localhost:5555/appointmentRoute/appointments/${currentAppointment._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedData),
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to update the appointment");
-
-      const updatedAppointment = await response.json();
-      setAppointments((prevAppointments) =>
-        prevAppointments.map((appointment) =>
-          appointment._id === updatedAppointment._id
-            ? updatedAppointment
-            : appointment
-        )
-      );
-      setEditMode(false);
-      setCurrentAppointment(null);
-    } catch (error) {
-      console.error("Error updating appointment:", error);
-      setError(
-        "An error occurred while updating the appointment. Please try again."
-      );
-    }
-  };
-
-  const handleReport = () => {
-    const doc = new jsPDF("p", "mm", "a4");
-
-    doc.setFontSize(18);
-    doc.text("Appointments Report", doc.internal.pageSize.getWidth() / 2, 13, {
-      align: "center",
-    });
-
-    const headers = [
-      [
-        "Appointment Date",
-        "Time",
-        "Status",
-        "Reason",
-        "Location",
-        "Patient",
-        "Doctor",
-        "Payment Status",
-        "Notes",
-      ],
-    ];
-
-    const data = appointments.map((appointment) => [
-      appointment.appointmentDate || "",
-      appointment.time || "",
-      appointment.appointmentStatus || "",
-      appointment.appointmentReason || "",
-      appointment.location || "",
-      appointment.patientId?.firstName +
-        " " +
-        appointment.patientId?.lastName || "",
-      getDoctorName(appointment.doctorId) || "", // Fetch doctor name using the helper function
-      appointment.paymentStatus || "",
-      doc.splitTextToSize(appointment.notes || "", 50),
-    ]);
-
-    doc.autoTable({
-      head: headers,
-      body: data,
-      startY: 25,
-      theme: "grid",
-      styles: {
-        fontSize: 10,
-        cellPadding: 3,
-      },
-      columnStyles: {
-        0: { cellWidth: 20 },
-        1: { cellWidth: 20 },
-        2: { cellWidth: 30 },
-        3: { cellWidth: 30 },
-        4: { cellWidth: 25 },
-        5: { cellWidth: 25 },
-        6: { cellWidth: 20 },
-        7: { cellWidth: 40 },
-        8: { cellWidth: 20 },
-      },
-      headStyles: {
-        fillColor: [52, 152, 219], // Updated header color to a blue shade
-        textColor: [255, 255, 255],
-      },
-      margin: { top: 20 },
-    });
-
-    doc.save("appointments_report.pdf");
   };
 
   const filteredAppointments = appointments.filter((appointment) => {
@@ -198,20 +91,19 @@ const Appointments = () => {
     const doctorName = getDoctorName(appointment.doctorId)?.toLowerCase() || "";
     const search = searchTerm.toLowerCase();
 
-    return patientName.includes(search) || doctorName.includes(search);
+    return (
+      (patientName.includes(search) || doctorName.includes(search)) &&
+      appointment.paymentStatus === "Paid"
+    );
   });
 
-  const breadcrumbItems = [
-    { name: "Appointments", href: "/appointments/home" },
-  ];
-
-  const navigateToService = () => {
-    navigate("/services/home");
-  };
+  const breadcrumbItems = [{ name: "Bookings", href: "/bookings/home" }];
 
   return (
     <SnackbarProvider>
       <div className="flex flex-col min-h-screen font-sans">
+        {" "}
+        {/* Add modern font family */}
         <div className="sticky top-0 z-10">
           <Navbar />
         </div>
@@ -226,11 +118,11 @@ const Appointments = () => {
             </div>
 
             <h1 className="text-3xl font-bold mb-6 text-center text-teal-600">
-              Appointment Details
+              Booking Details
             </h1>
             {error && <p className="text-red-500">{error}</p>}
             {loading ? (
-              <p className="text-center">Loading appointments...</p>
+              <p className="text-center">Loading bookings...</p>
             ) : (
               <>
                 {!editMode && (
@@ -247,25 +139,12 @@ const Appointments = () => {
                         <FontAwesomeIcon icon={faSearch} />
                       </span>
                     </div>
-                    <button
-                      onClick={handleReport}
-                      className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg flex items-center shadow-lg transition duration-200 text-sm"
-                    >
-                      <FontAwesomeIcon icon={faFileDownload} className="mr-2" />
-                      Generate PDF Report
-                    </button>
-                    <button
-                      onClick={navigateToService}
-                      className="bg-blue-500 hover:bg-blue-400 text-white px-4 py-2 rounded-lg shadow-lg transition duration-200 text-sm"
-                    >
-                      Go to Service Page
-                    </button>
                   </div>
                 )}
                 {editMode ? (
                   <AppointmentForm
                     appointment={currentAppointment}
-                    onUpdate={handleUpdate}
+                    onUpdate={handleDelete}
                     onCancel={() => setEditMode(false)}
                   />
                 ) : (
@@ -273,9 +152,7 @@ const Appointments = () => {
                     <table className="min-w-full bg-white border border-green-200 text-[13.3px]">
                       <thead className="bg-gray-300">
                         <tr>
-                          <th className="py-3 px-4 border-b">
-                            Appointment Date
-                          </th>
+                          <th className="py-3 px-4 border-b">Booking Date</th>
                           <th className="py-3 px-4 border-b">Time</th>
                           <th className="py-3 px-4 border-b">Status</th>
                           <th className="py-3 px-4 border-b">Reason</th>
@@ -290,7 +167,7 @@ const Appointments = () => {
                         {filteredAppointments.length === 0 ? (
                           <tr>
                             <td colSpan="8" className="text-center py-4">
-                              No appointments found.
+                              No bookings found.
                             </td>
                           </tr>
                         ) : (
@@ -324,12 +201,6 @@ const Appointments = () => {
                               <td className="py-2 px-4 border-b">
                                 <div className="flex space-x-2">
                                   <button
-                                    onClick={() => handleEdit(appointment)}
-                                    className="text-teal-600 hover:text-teal-500"
-                                  >
-                                    <FontAwesomeIcon icon={faEdit} />
-                                  </button>
-                                  <button
                                     onClick={() =>
                                       handleDelete(appointment._id)
                                     }
@@ -355,4 +226,4 @@ const Appointments = () => {
   );
 };
 
-export default Appointments;
+export default Bookings;
