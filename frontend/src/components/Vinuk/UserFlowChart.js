@@ -96,28 +96,16 @@ const options = {
 };
 
 const PatientFlowWeeklyBarChart = () => {
-  const graphStyle = {
-    minHeight: '700px',
-    maxWidth: '900px',
-    margin: '0 auto',
-    padding: '1rem',
-    border: '1px solid #e5e7eb',
-    borderRadius: '0.5rem',
-    backgroundColor: '#ffffff',
-    // Added shadow effect
-    boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.1)', // Subtle shadow
-    transition: 'transform 0.3s ease-in-out', // Smooth transition effect
-  };
-
   return (
     <div
-      style={graphStyle}
-      className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out"
+      className="w-full max-w-4xl sm:max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-lg hover:shadow-xl transition-transform transform hover:scale-105 duration-300 ease-in-out"
     >
       <h2 className="text-center text-2xl sm:text-3xl font-bold text-gray-800 mb-6">
         Patient Flow - Weekly Overview
       </h2>
-      <Bar data={data} options={options} />
+      <div className="h-[400px] sm:h-[500px]">
+        <Bar data={data} options={options} />
+      </div>
     </div>
   );
 };
