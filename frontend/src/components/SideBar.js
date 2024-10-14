@@ -18,7 +18,7 @@ const Sidebar = () => {
 
     const Menus = [
         { name: "Profile", path: "/profile", icon: CgProfile },
-        { name: "Services", path: "/services/home", icon: MdOutlineMedicalServices  },
+        { name: "Services", path: "/serviceView", icon: MdOutlineMedicalServices  },
         { name: "Bookings", path: "/bookings/home", icon: IoCalendarOutline },
         { name: "Home", path: "/dashboard", icon: HomeIcon },
         { name: "Finances", path: "/finances/home", icon: BanknotesIcon },

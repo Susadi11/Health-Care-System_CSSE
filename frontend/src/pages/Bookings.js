@@ -6,8 +6,6 @@ import {
   faSearch,
   faFileDownload,
 } from "@fortawesome/free-solid-svg-icons";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable";
 import { SnackbarProvider } from "notistack";
 import SideBar from "../components/SideBar";
 import Navbar from "../components/utility/Navbar";
@@ -18,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 const Bookings = () => {
   const [appointments, setAppointments] = useState([]);
+  const [doctors, setDoctors] = useState([]); // Hold doctors data
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
@@ -33,22 +32,40 @@ const Bookings = () => {
         const response = await fetch(
           "https://health-care-system-csse.vercel.app/appointmentRoute/appointments"
         );
-        if (!response.ok) throw new Error("Failed to fetch appointments");
+        if (!response.ok) throw new Error("Failed to fetch bookings");
         const data = await response.json();
         setAppointments(data);
       } catch (error) {
-        console.error("Error fetching appointments:", error);
-        setError("Failed to fetch appointments. Please try again.");
+        console.error("Error fetching bookings:", error);
+        setError("Failed to fetch bookings. Please try again.");
       } finally {
         setLoading(false);
       }
     };
 
+    const fetchDoctors = async () => {
+      try {
+        const response = await fetch("http://localhost:5555/doctorRoute/");
+        if (!response.ok) throw new Error("Failed to fetch doctors");
+        const data = await response.json();
+        setDoctors(data); // Set fetched doctors to state
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+      }
+    };
+
     fetchAppointments();
+    fetchDoctors();
   }, []);
 
+  // Match doctor by ID in the appointments data
+  const getDoctorName = (doctorId) => {
+    const doctor = doctors.find((doc) => doc._id === doctorId);
+    return doctor ? `${doctor.firstName} ${doctor.lastName}` : "Unknown Doctor";
+  };
+
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this appointment?")) {
+    if (window.confirm("Are you sure you want to delete this booking?")) {
       try {
         const response = await fetch(
           `http://localhost:5555/appointmentRoute/appointments/${id}`,
@@ -56,14 +73,14 @@ const Bookings = () => {
             method: "DELETE",
           }
         );
-        if (!response.ok) throw new Error("Failed to delete the appointment");
+        if (!response.ok) throw new Error("Failed to delete the booking");
         setAppointments((prevAppointments) =>
           prevAppointments.filter((appointment) => appointment._id !== id)
         );
       } catch (error) {
-        console.error("Error deleting appointment:", error);
+        console.error("Error deleting booking:", error);
         setError(
-          "An error occurred while deleting the appointment. Please try again."
+          "An error occurred while deleting the booking. Please try again."
         );
       }
     }
@@ -71,7 +88,7 @@ const Bookings = () => {
 
   const filteredAppointments = appointments.filter((appointment) => {
     const patientName = appointment.patientId?.firstName?.toLowerCase() || "";
-    const doctorName = appointment.doctorId?.firstName?.toLowerCase() || "";
+    const doctorName = getDoctorName(appointment.doctorId)?.toLowerCase() || "";
     const search = searchTerm.toLowerCase();
 
     return (
@@ -80,7 +97,7 @@ const Bookings = () => {
     );
   });
 
-  const breadcrumbItems = [{ name: "Bookings", href: "/dashboard" }];
+  const breadcrumbItems = [{ name: "Bookings", href: "/bookings/home" }];
 
   return (
     <SnackbarProvider>
@@ -105,7 +122,7 @@ const Bookings = () => {
             </h1>
             {error && <p className="text-red-500">{error}</p>}
             {loading ? (
-              <p className="text-center">Loading appointments...</p>
+              <p className="text-center">Loading bookings...</p>
             ) : (
               <>
                 {!editMode && (
@@ -150,7 +167,7 @@ const Bookings = () => {
                         {filteredAppointments.length === 0 ? (
                           <tr>
                             <td colSpan="8" className="text-center py-4">
-                              No appointments found.
+                              No bookings found.
                             </td>
                           </tr>
                         ) : (
@@ -176,8 +193,7 @@ const Bookings = () => {
                                 {appointment.patientId?.lastName}
                               </td>
                               <td className="py-2 px-4 border-b">
-                                {appointment.doctorId?.firstName}{" "}
-                                {appointment.doctorId?.lastName}
+                                {getDoctorName(appointment.doctorId)}
                               </td>
                               <td className="py-2 px-4 border-b">
                                 {appointment.paymentStatus}

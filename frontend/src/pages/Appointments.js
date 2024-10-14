@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 const Appointments = () => {
   const [appointments, setAppointments] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
@@ -26,6 +27,7 @@ const Appointments = () => {
 
   const navigate = useNavigate();
 
+  // Fetch appointments and doctors when the component loads
   useEffect(() => {
     const fetchAppointments = async () => {
       setLoading(true);
@@ -44,8 +46,26 @@ const Appointments = () => {
       }
     };
 
+    const fetchDoctors = async () => {
+      try {
+        const response = await fetch("http://localhost:5555/doctorRoute/");
+        if (!response.ok) throw new Error("Failed to fetch doctors");
+        const data = await response.json();
+        setDoctors(data);
+      } catch (error) {
+        console.error("Error fetching doctors:", error);
+      }
+    };
+
     fetchAppointments();
+    fetchDoctors();
   }, []);
+
+  // Match doctor by ID in the appointments data
+  const getDoctorName = (doctorId) => {
+    const doctor = doctors.find((doc) => doc._id === doctorId);
+    return doctor ? `${doctor.firstName} ${doctor.lastName}` : "Unknown Doctor";
+  };
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this appointment?")) {
@@ -138,8 +158,7 @@ const Appointments = () => {
       appointment.patientId?.firstName +
         " " +
         appointment.patientId?.lastName || "",
-      appointment.doctorId?.firstName + " " + appointment.doctorId?.lastName ||
-        "",
+      getDoctorName(appointment.doctorId) || "", // Fetch doctor name using the helper function
       appointment.paymentStatus || "",
       doc.splitTextToSize(appointment.notes || "", 50),
     ]);
@@ -176,7 +195,7 @@ const Appointments = () => {
 
   const filteredAppointments = appointments.filter((appointment) => {
     const patientName = appointment.patientId?.firstName?.toLowerCase() || "";
-    const doctorName = appointment.doctorId?.firstName?.toLowerCase() || "";
+    const doctorName = getDoctorName(appointment.doctorId)?.toLowerCase() || "";
     const search = searchTerm.toLowerCase();
 
     return patientName.includes(search) || doctorName.includes(search);
@@ -189,11 +208,10 @@ const Appointments = () => {
   const navigateToService = () => {
     navigate("/services/home");
   };
+
   return (
     <SnackbarProvider>
       <div className="flex flex-col min-h-screen font-sans">
-        {" "}
-        {/* Add modern font family */}
         <div className="sticky top-0 z-10">
           <Navbar />
         </div>
@@ -298,8 +316,7 @@ const Appointments = () => {
                                 {appointment.patientId?.lastName}
                               </td>
                               <td className="py-2 px-4 border-b">
-                                {appointment.doctorId?.firstName}{" "}
-                                {appointment.doctorId?.lastName}
+                                {getDoctorName(appointment.doctorId)}
                               </td>
                               <td className="py-2 px-4 border-b">
                                 {appointment.paymentStatus}

@@ -34,7 +34,7 @@ export default function Navbar() {
                             Dashboard
                         </div>
                     </Link>
-                    <Link to="/tourism" className="nav-item">
+                    <Link to="/serviceView" className="nav-item">
                         <div className="h-full font-medium px-6 rounded-full transition-all duration-200 hover:bg-lime-200">
                             Services
                         </div>
@@ -79,7 +79,7 @@ export default function Navbar() {
                     <div className="space-y-1 px-2 pb-3 pt-2">
                         <Link to="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Home</Link>
                         <Link to="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Dashboard</Link>
-                        <Link to="/tourism" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Services</Link>
+                        <Link to="/serviceView" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Services</Link>
                         <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Login</Link>
                         <Link to="/signUp" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Sign Up</Link>
                     </div>
