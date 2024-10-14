@@ -47,7 +47,7 @@ export default function Dashboard() {
                         <div className="absolute top-0 right-10 mt-4">
                             <button
                                 className="text-white font-semibold py-2 px-4 rounded-lg hover:brightness-110 transition"
-                                style={{ backgroundColor: "#70bf56" }}
+                                style={{ backgroundColor: "#268bf0" }}
                                 onClick={() => navigate("/DoctorsNames")} // Navigate to DoctorsNames route
                             >
                                 Doctors
