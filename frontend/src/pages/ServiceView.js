@@ -55,8 +55,8 @@ const ServiceView = () => {
             <Breadcrumb items={breadcrumbItems} />
           </div>
 
-          <h1 className="text-3xl font-bold mb-6 text-center text-teal-600">
-            Available Services
+          <h1 className="text-3xl font-semibold mb-6 text-center text-teal-600">
+          Offering The Most Advanced Clinical Programs 
           </h1>
 
           {error && <p className="text-red-500">{error}</p>}
@@ -75,22 +75,24 @@ const ServiceView = () => {
                       alt={service.name}
                       className="w-full h-40 object-cover rounded mb-4"
                     />
-                    <h2 className="text-xl font-semibold text-teal-600 mb-2">
+                    <h1 className="text-xl font-bold text-teal-600 mb-2 ">
                       {service.title}
-                    </h2>
+                    </h1>
+                   
                     <p className="text-gray-700 text-sm mb-4">
                       {service.description}
                     </p>
+                    <h2 className="text-l font-semibold text-gray-700 mb-2">
+                      {service.name}
+                    </h2>
                   </div>
                   <div className="mt-auto">
-                    <p className="text-teal-700 font-bold text-lg mb-2">
-                      Rs.{service.price}
-                    </p>
+                     
                     <button
                       onClick={() => handleBook(service)} // Navigate to AddAppointment
                       className="bg-teal-600 hover:bg-teal-500 text-white px-4 py-2 rounded-lg shadow-lg transition duration-200"
                     >
-                      Book
+                      Book an Appointment
                     </button>
                   </div>
                 </div>
