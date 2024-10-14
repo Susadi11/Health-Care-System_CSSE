@@ -14,9 +14,8 @@ import Navbar from "../components/utility/Navbar";
 import Breadcrumb from "../components/utility/Breadcrumbs";
 import BackButton from "../components/utility/BackButton";
 import AppointmentForm from "../components/Tharushi/AppointmentForm";
-import { useNavigate } from "react-router-dom";
 
-const Appointments = () => {
+const Bookings = () => {
   const [appointments, setAppointments] = useState([]);
   const [doctors, setDoctors] = useState([]);
   const [error, setError] = useState(null);
@@ -25,8 +24,6 @@ const Appointments = () => {
   const [currentAppointment, setCurrentAppointment] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const { enqueueSnackbar } = useSnackbar();
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAppointments();
@@ -39,13 +36,13 @@ const Appointments = () => {
       const response = await fetch(
           "https://health-care-system-csse.vercel.app/appointmentRoute/appointments"
       );
-      if (!response.ok) throw new Error("Failed to fetch appointments");
+      if (!response.ok) throw new Error("Failed to fetch bookings");
       const data = await response.json();
       setAppointments(data);
     } catch (error) {
-      console.error("Error fetching appointments:", error);
-      setError("Failed to fetch appointments. Please try again.");
-      enqueueSnackbar("Failed to fetch appointments", { variant: "error" });
+      console.error("Error fetching bookings:", error);
+      setError("Failed to fetch bookings. Please try again.");
+      enqueueSnackbar("Failed to fetch bookings", { variant: "error" });
     } finally {
       setLoading(false);
     }
@@ -69,7 +66,7 @@ const Appointments = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this appointment?")) {
+    if (window.confirm("Are you sure you want to delete this booking?")) {
       try {
         const response = await fetch(
             `https://health-care-system-csse.vercel.app/appointmentRoute/appointments/${id}`,
@@ -77,17 +74,17 @@ const Appointments = () => {
               method: "DELETE",
             }
         );
-        if (!response.ok) throw new Error("Failed to delete the appointment");
+        if (!response.ok) throw new Error("Failed to delete the booking");
         setAppointments((prevAppointments) =>
             prevAppointments.filter((appointment) => appointment._id !== id)
         );
-        enqueueSnackbar("Appointment deleted successfully", { variant: "success" });
+        enqueueSnackbar("Booking deleted successfully", { variant: "success" });
       } catch (error) {
-        console.error("Error deleting appointment:", error);
+        console.error("Error deleting booking:", error);
         setError(
-            "An error occurred while deleting the appointment. Please try again."
+            "An error occurred while deleting the booking. Please try again."
         );
-        enqueueSnackbar("Failed to delete appointment", { variant: "error" });
+        enqueueSnackbar("Failed to delete booking", { variant: "error" });
       }
     }
   };
@@ -110,7 +107,7 @@ const Appointments = () => {
           }
       );
 
-      if (!response.ok) throw new Error("Failed to update the appointment");
+      if (!response.ok) throw new Error("Failed to update the booking");
 
       const updatedAppointment = await response.json();
       setAppointments((prevAppointments) =>
@@ -122,13 +119,11 @@ const Appointments = () => {
       );
       setEditMode(false);
       setCurrentAppointment(null);
-      enqueueSnackbar("Appointment updated successfully", { variant: "success" });
+      enqueueSnackbar("Booking updated successfully", { variant: "success" });
     } catch (error) {
-      console.error("Error updating appointment:", error);
-      setError(
-          "An error occurred while updating the appointment. Please try again."
-      );
-      enqueueSnackbar("Failed to update appointment", { variant: "error" });
+      console.error("Error updating booking:", error);
+      setError("An error occurred while updating the booking. Please try again.");
+      enqueueSnackbar("Failed to update booking", { variant: "error" });
     }
   };
 
@@ -141,13 +136,13 @@ const Appointments = () => {
     const doc = new jsPDF("p", "mm", [297, 420]);
 
     doc.setFontSize(18);
-    doc.text("Appointments Report", doc.internal.pageSize.getWidth() / 2, 13, {
+    doc.text("Bookings Report", doc.internal.pageSize.getWidth() / 2, 13, {
       align: "center",
     });
 
     const headers = [
       [
-        "Appointment Date",
+        "Booking Date",
         "Time",
         "Status",
         "Reason",
@@ -155,7 +150,6 @@ const Appointments = () => {
         "Patient",
         "Doctor",
         "Payment Status",
-        "Notes",
       ],
     ];
 
@@ -165,12 +159,11 @@ const Appointments = () => {
       appointment.appointmentStatus || "",
       appointment.appointmentReason || "",
       appointment.location || "",
-      appointment.patientId?.firstName +
-      " " +
-      appointment.patientId?.lastName || "",
-      getDoctorName(appointment.doctorId) || "",
+      `${appointment.patientId?.firstName || ""} ${
+          appointment.patientId?.lastName || ""
+      }`,
+      getDoctorName(appointment.doctorId),
       appointment.paymentStatus || "",
-      doc.splitTextToSize(appointment.notes || "", 50),
     ]);
 
     const tableWidth = 250;
@@ -189,13 +182,12 @@ const Appointments = () => {
       columnStyles: {
         0: { cellWidth: 25 },
         1: { cellWidth: 20 },
-        2: { cellWidth: 25 },
+        2: { cellWidth: 20 },
         3: { cellWidth: 30 },
         4: { cellWidth: 25 },
         5: { cellWidth: 30 },
         6: { cellWidth: 30 },
         7: { cellWidth: 25 },
-        8: { cellWidth: 40 },
       },
       headStyles: {
         fillColor: [52, 152, 219],
@@ -204,24 +196,24 @@ const Appointments = () => {
       margin: { top: 20, left: marginLeft },
     });
 
-    doc.save("appointments_report.pdf");
+    doc.save("bookings_report.pdf");
   };
 
   const filteredAppointments = appointments.filter((appointment) => {
-    const patientName = (appointment.patientId?.firstName + " " + appointment.patientId?.lastName).toLowerCase();
+    const patientName =
+        `${appointment.patientId?.firstName || ""} ${
+            appointment.patientId?.lastName || ""
+        }`.toLowerCase();
     const doctorName = getDoctorName(appointment.doctorId).toLowerCase();
     const search = searchTerm.toLowerCase();
 
-    return patientName.includes(search) || doctorName.includes(search);
+    return (
+        (patientName.includes(search) || doctorName.includes(search)) &&
+        appointment.paymentStatus === "Paid"
+    );
   });
 
-  const breadcrumbItems = [
-    { name: "Appointments", href: "/appointments/home" },
-  ];
-
-  const navigateToService = () => {
-    navigate("/services/home");
-  };
+  const breadcrumbItems = [{ name: "Bookings", href: "/bookings/home" }];
 
   return (
       <SnackbarProvider>
@@ -248,19 +240,27 @@ const Appointments = () => {
                   <div className="overflow-x-auto">
                     <div className="flex flex-col md:flex-row justify-between items-start md:items-center px-4 md:px-8 py-4">
                       <div className="w-full md:w-1/2 mb-4 md:mb-0">
-                        <h1 className="text-lg font-semibold text-left">Appointment Details</h1>
-                        <p className="mt-1 text-sm font-normal text-gray-500">Easily access stored Appointment Records within the system for thorough insights.</p>
+                        <h1 className="text-lg font-semibold text-left">
+                          Booking Details
+                        </h1>
+                        <p className="mt-1 text-sm font-normal text-gray-500">
+                          Easily access stored Booking Records within the system for
+                          thorough insights.
+                        </p>
                         <div className="py-4 relative">
                           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <FontAwesomeIcon icon={faSearch} className="text-gray-500 h-4 w-4"/>
+                            <FontAwesomeIcon
+                                icon={faSearch}
+                                className="text-gray-500 h-4 w-4"
+                            />
                           </div>
                           <input
                               type="text"
-                              placeholder="Search appointments..."
-                              className="border border-gray-300 rounded-full px-3 py-1 w-full text-sm pl-10"
-                              style={{paddingRight: '2.5rem'}}
+                              placeholder="Search bookings..."
                               value={searchTerm}
                               onChange={(e) => setSearchTerm(e.target.value)}
+                              className="border border-gray-300 rounded-full px-3 py-1 w-full text-sm pl-10"
+                              style={{ paddingRight: "2.5rem" }}
                           />
                         </div>
                       </div>
@@ -270,55 +270,90 @@ const Appointments = () => {
                               onClick={handleReport}
                               className="w-full md:w-auto flex-none rounded-full bg-gray-900 px-3.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
                           >
-                            Generate report <FontAwesomeIcon icon={faFileDownload} className="ml-1"/>
-                          </button>
-                          <button
-                              onClick={navigateToService}
-                              className="w-full md:w-auto flex-none rounded-full bg-blue-500 px-3.5 py-1 text-sm font-semibold text-white shadow-sm hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500"
-                          >
-                            Go to Service Page
+                            Generate report{" "}
+                            <FontAwesomeIcon icon={faFileDownload} className="ml-1" />
                           </button>
                         </div>
                       </div>
                     </div>
                     {error && <p className="text-red-500">{error}</p>}
                     {loading ? (
-                        <p className="text-center">Loading appointments...</p>
+                        <p className="text-center">Loading bookings...</p>
                     ) : (
                         <table className="w-full text-sm text-left rtl:text-right text-gray-500 mt-10">
                           <thead className="text-xs text-gray-700 shadow-md uppercase bg-gray-100 border-l-4 border-gray-500">
                           <tr>
-                            <th scope="col" className="px-6 py-3">No</th>
-                            <th scope="col" className="px-6 py-3">Appointment Date</th>
-                            <th scope="col" className="px-6 py-3">Time</th>
-                            <th scope="col" className="px-6 py-3">Status</th>
-                            <th scope="col" className="px-6 py-3">Reason</th>
-                            <th scope="col" className="px-6 py-3">Location</th>
-                            <th scope="col" className="px-6 py-3">Patient</th>
-                            <th scope="col" className="px-6 py-3">Doctor</th>
-                            <th scope="col" className="px-6 py-3">Payment Status</th>
-                            <th scope="col" className="px-6 py-3">Actions</th>
+                            <th scope="col" className="px-6 py-3">
+                              No
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Booking Date
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Time
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Status
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Reason
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Location
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Patient
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Doctor
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Payment Status
+                            </th>
+                            <th scope="col" className="px-6 py-3">
+                              Actions
+                            </th>
                           </tr>
                           </thead>
                           <tbody>
                           {filteredAppointments.map((appointment, index) => (
                               <tr key={appointment._id} className="hover:bg-gray-100">
                                 <td className="px-6 py-4">{index + 1}</td>
-                                <td className="px-6 py-4">{appointment.appointmentDate}</td>
+                                <td className="px-6 py-4">
+                                  {appointment.appointmentDate}
+                                </td>
                                 <td className="px-6 py-4">{appointment.time}</td>
-                                <td className="px-6 py-4">{appointment.appointmentStatus}</td>
-                                <td className="px-6 py-4">{appointment.appointmentReason}</td>
+                                <td className="px-6 py-4">
+                                  {appointment.appointmentStatus}
+                                </td>
+                                <td className="px-6 py-4">
+                                  {appointment.appointmentReason}
+                                </td>
                                 <td className="px-6 py-4">{appointment.location}</td>
-                                <td className="px-6 py-4">{`${appointment.patientId?.firstName} ${appointment.patientId?.lastName}`}</td>
-                                <td className="px-6 py-4">{getDoctorName(appointment.doctorId)}</td>
-                                <td className="px-6 py-4">{appointment.paymentStatus}</td>
+                                <td className="px-6 py-4">
+                                  {`${appointment.patientId?.firstName || ""} ${
+                                      appointment.patientId?.lastName || ""
+                                  }`}
+                                </td>
+                                <td className="px-6 py-4">
+                                  {getDoctorName(appointment.doctorId)}
+                                </td>
+                                <td className="px-6 py-4">
+                                  {appointment.paymentStatus}
+                                </td>
                                 <td className="px-6 py-4">
                                   <div className="flex space-x-2">
                                     <button onClick={() => handleEdit(appointment)}>
-                                      <FontAwesomeIcon icon={faEdit} className="text-green-600 hover:text-green-800"/>
+                                      <FontAwesomeIcon
+                                          icon={faEdit}
+                                          className="text-green-600 hover:text-green-800"
+                                      />
                                     </button>
                                     <button onClick={() => handleDelete(appointment._id)}>
-                                      <FontAwesomeIcon icon={faTrashAlt} className="text-red-600 hover:text-red-800"/>
+                                      <FontAwesomeIcon
+                                          icon={faTrashAlt}
+                                          className="text-red-600 hover:text-red-800"
+                                      />
                                     </button>
                                   </div>
                                 </td>
@@ -336,4 +371,4 @@ const Appointments = () => {
   );
 };
 
-export default Appointments
+export default Bookings;
