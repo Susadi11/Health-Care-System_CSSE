@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {SnackbarProvider} from "notistack";
+import React, { useEffect, useState } from "react";
+import { SnackbarProvider } from "notistack";
 import SideBar from "../components/SideBar";
 import Navbar from "../components/utility/Navbar";
 import BackButton from "../components/utility/BackButton";
@@ -11,9 +11,7 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(false);
     const [currentTile, setCurrentTile] = useState(1);
 
-    const breadcrumbItems = [
-        { name: 'Home', href: '/dashboard' }
-    ];
+    const breadcrumbItems = [{ name: "Home", href: "/dashboard" }];
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -25,50 +23,41 @@ export default function Dashboard() {
 
     return (
         <SnackbarProvider>
-            <div className="">
+            <div className="min-h-screen">
                 <div className="sticky top-0 z-10">
-                    <Navbar/>
-
+                    <Navbar />
                 </div>
-                <div className="">
-                    <div className="grid sm:grid-cols-6 ">
-                        <div className="  col-span-1 sticky top-0">
-                            <SideBar/>
+
+                <div className="grid sm:grid-cols-6">
+                    {/* Sidebar */}
+                    <div className="col-span-1 sticky top-0">
+                        <SideBar />
+                    </div>
+
+                    {/* Main Content */}
+                    <div className="w-full col-span-5 flex flex-col px-10">
+                        <div className="flex flex-row items-center mb-6">
+                            <BackButton />
+                            <Breadcrumb items={breadcrumbItems} />
                         </div>
 
-                        <div className="w-full col-span-5 flex flex-col ">
-                            <div className="flex flex-row ">
-                                <BackButton />
-                                <Breadcrumb items={breadcrumbItems} />
-                            </div>
-                            <div>
+                        {/* Title Section */}
+                        <div className="text-center mb-12">
+                            <h1 className="text-6xl font-bold text-gray-800">
+                                CARENET ANALYTICS
+                            </h1>
+                        </div>
+
+                        {/* Charts Section */}
+                        <div className="flex flex-col gap-10 items-center justify-center">
+                            {/* Appointment Chart */}
+                            <div className="w-full max-w-4xl">
                                 <Appointment />
+                            </div>
+
+                            {/* User Flow Chart with Reduced Height */}
+                            <div className="w-full max-w-4xl h-[1000px]">
                                 <UserFlowChart />
-                            </div>
-                            
-                            <div className="p-4">
-
-                            </div>
-                            <div className="ml-4 max-h-20 relative">
-                                <div className="stackable-widget absolute top-0 left-0 w-80 h-60">
-                                    <div
-                                        className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ${
-                                            currentTile === 1 ? "opacity-100" : "opacity-0"
-                                        }`}
-                                    >
-                                       
-                                    </div>
-                                    <div>
-                                    
-                                    </div>
-                                    <div
-                                        className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ${
-                                            currentTile === 2 ? "opacity-100" : "opacity-0"
-                                        }`}
-                                    >
-
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </div>
