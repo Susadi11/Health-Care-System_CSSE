@@ -12,11 +12,11 @@ import GenerateQR from "./pages/HealthCard_Pages/GenerateQR";
 
 import Appointments from "./pages/Appointments";
 import Services from "./pages/Services";
- 
+
 import AddAppointment from "./pages/AddAppointment";
- 
+
 import ProfilePage from "./pages/ProfilePage";
- 
+import Bookings from "./pages/Bookings";
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -46,9 +46,8 @@ export default function App() {
         <Route path="/appointments/home" element={<Appointments />} />
         <Route path="/services/home" element={<Services />} />
         <Route path="/add-appointment" element={<AddAppointment />} />
- 
+        <Route path="/bookings/home" element={<Bookings />} />
         <Route path="/generate-qr/:id" element={<GenerateQR />} />
- 
       </Routes>
     </div>
   );
