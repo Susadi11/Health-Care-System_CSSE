@@ -37,7 +37,7 @@ const patientSchema = new mongoose.Schema(
         },
         insuranceNumber: {
             type: String,
-            required: true,
+            required: false,
         },
         physician: {
             type: String,
