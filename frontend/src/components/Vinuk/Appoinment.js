@@ -23,7 +23,7 @@ const AppointmentChart = () => {
         const response = await fetch("http://localhost:5555/appointmentRoute/appointments");
         const appointments = await response.json();
 
-        // Step 2: Process the data to group by hour
+        // Step 2: Process the data to group by hour (using the `time` field)
         const hourlyCounts = processAppointmentsByHour(appointments);
 
         // Step 3: Prepare the data for the chart
@@ -50,13 +50,14 @@ const AppointmentChart = () => {
     fetchAppointments();
   }, []);
 
-  // Helper function to group appointments by hour
+  // Helper function to group appointments by hour using the `time` field
   const processAppointmentsByHour = (appointments) => {
     const counts = {};
 
     appointments.forEach((appointment) => {
-      const hour = new Date(appointment.appointmentDate).getHours(); // Extract hour
-      counts[`${hour}:00`] = (counts[`${hour}:00`] || 0) + 1; // Increment the count for the hour
+      const [hour] = appointment.time.split(":"); // Extract hour from `time` (e.g., "08:30" -> "08")
+      const parsedHour = parseInt(hour, 10); // Convert to integer
+      counts[`${parsedHour}:00`] = (counts[`${parsedHour}:00`] || 0) + 1; // Increment the count for the hour
     });
 
     return counts;
