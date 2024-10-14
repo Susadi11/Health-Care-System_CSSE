@@ -51,30 +51,32 @@ export default function Doctors() {
 
                 <div className="grid sm:grid-cols-6">
                     {/* Sidebar */}
-                    <div className="col-span-1 sticky top-0">
+                    <div className="col-span-1 hidden sm:block sticky top-0">
                         <SideBar />
                     </div>
 
                     {/* Main Content */}
-                    <div className="w-full col-span-5 flex flex-col px-10">
-                        <div className="flex flex-row items-center mb-6">
-                            <BackButton />
-                            <Breadcrumb items={breadcrumbItems} />
+                    <div className="w-full sm:col-span-5 flex flex-col px-4 sm:px-10">
+                        <div className="flex flex-wrap items-center justify-between mb-4">
+                            <div className="flex items-center">
+                                <BackButton />
+                                <Breadcrumb items={breadcrumbItems} />
+                            </div>
                         </div>
 
                         <div className="text-center mb-6">
-                            <h1 className="text-5xl font-bold text-gray-800">Doctors List</h1>
+                            <h1 className="text-2xl sm:text-5xl font-bold text-gray-800">Doctors List</h1>
                         </div>
 
                         {/* Search Input */}
                         <div className="mb-4 flex justify-end">
-                            <div className="relative">
+                            <div className="relative w-full max-w-xs">
                                 <input
                                     type="text"
                                     placeholder="Search doctor..."
                                     value={searchQuery}
                                     onChange={handleSearch}
-                                    className="px-4 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    className="w-full px-4 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
                                 />
                                 <FaSearch className="absolute right-3 top-2.5 text-gray-400" />
                             </div>
