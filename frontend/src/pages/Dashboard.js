@@ -5,6 +5,7 @@ import Navbar from "../components/utility/Navbar";
 import BackButton from "../components/utility/BackButton";
 import Breadcrumb from "../components/utility/Breadcrumbs";
 import Appointment from "../components/Vinuk/Appoinment";
+import UserFlowChart from "../components/Vinuk/UserFlowChart";
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false);
@@ -42,6 +43,7 @@ export default function Dashboard() {
                             </div>
                             <div>
                                 <Appointment />
+                                <UserFlowChart />
                             </div>
                             
                             <div className="p-4">
