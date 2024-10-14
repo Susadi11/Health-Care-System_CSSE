@@ -187,7 +187,7 @@ const Appointments = () => {
   ];
 
   const navigateToService = () => {
-    navigate("/services");
+    navigate("/services/home");
   };
   return (
     <SnackbarProvider>
