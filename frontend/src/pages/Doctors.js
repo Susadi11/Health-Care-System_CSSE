@@ -84,7 +84,7 @@ export default function Doctors() {
                         <div className="overflow-x-auto">
                             <table className="w-full border-collapse shadow-lg rounded-lg">
                                 <thead>
-                                    <tr style={{ backgroundColor: "#70bf56", color: "white" }}>
+                                    <tr style={{ backgroundColor: "#268bf0", color: "white" }}>
                                         <th className="border border-gray-300 px-4 py-2 rounded-tl-lg">First Name</th>
                                         <th className="border border-gray-300 px-4 py-2">Last Name</th>
                                         <th className="border border-gray-300 px-4 py-2">Email</th>
