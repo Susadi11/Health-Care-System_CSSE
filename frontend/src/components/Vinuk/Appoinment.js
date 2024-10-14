@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,91 +9,86 @@ import {
   Title,
   Tooltip,
   Legend,
-  Filler,
 } from "chart.js";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-const Appointment = () => {
-  const sampleData = [43, 40, 50, 40, 70, 40, 45, 33, 40, 60, 40, 50, 36];
+const AppointmentChart = () => {
+  const [chartData, setChartData] = useState({ labels: [], datasets: [] });
 
-  const canvasData = {
-    datasets: [
-      {
-        label: "Home",
-        borderColor: "navy",
-        pointRadius: 0,
-        fill: true,
-        backgroundColor: "yellow",
-        lineTension: 0.4,
-        data: sampleData,
-        borderWidth: 1,
-      },
-    ],
+  // Step 1: Fetch appointments from the backend route
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await fetch("http://localhost:5555/appointmentRoute/appointments");
+        const appointments = await response.json();
+
+        // Step 2: Process the data to group by hour
+        const hourlyCounts = processAppointmentsByHour(appointments);
+
+        // Step 3: Prepare the data for the chart
+        const labels = Array.from({ length: 24 }, (_, i) => `${i}:00`); // 0:00 to 23:00
+        const data = labels.map((hour) => hourlyCounts[hour] || 0); // Fill missing hours with 0
+
+        setChartData({
+          labels,
+          datasets: [
+            {
+              label: "Number of Appointments",
+              data: data,
+              borderColor: "blue",
+              fill: false,
+              tension: 0.4,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Error fetching appointments:", error);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+  // Helper function to group appointments by hour
+  const processAppointmentsByHour = (appointments) => {
+    const counts = {};
+
+    appointments.forEach((appointment) => {
+      const hour = new Date(appointment.appointmentDate).getHours(); // Extract hour
+      counts[`${hour}:00`] = (counts[`${hour}:00`] || 0) + 1; // Increment the count for the hour
+    });
+
+    return counts;
   };
 
   const options = {
+    responsive: true,
     scales: {
       x: {
-        grid: {
-          display: false,
-        },
-        labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-        ticks: {
-          color: "red",
-          font: {
-            family: "Nunito",
-            size: 12,
-          },
+        title: {
+          display: true,
+          text: "Hour of the Day",
         },
       },
       y: {
-        grid: {
-          display: false,
+        title: {
+          display: true,
+          text: "Number of Appointments",
         },
-        border: {
-          display: false,
-        },
-        min: 0,
-        max: 80,
         ticks: {
-          stepSize: 10,
-          color: "green",
-          font: {
-            family: "Nunito",
-            size: 12,
-          },
+          stepSize: 1, // Customize this if needed
         },
-      },
-    },
-    maintainAspectRatio: false,
-    responsive: true,
-    plugins: {
-      legend: {
-        display: false,
-      },
-      title: {
-        display: false,
       },
     },
   };
 
   return (
-    <div
-      className="min-h-40 max-w-md w-full border border-gray-400 rounded-md p-2"
-    >
-      <Line id="home" options={options} data={canvasData} />
+    <div className="max-w-lg mx-auto p-4">
+      <h2 className="text-center text-2xl font-bold mb-4">Appointments by Hour</h2>
+      <Line data={chartData} options={options} />
     </div>
   );
 };
 
-export default Appointment;
+export default AppointmentChart;
