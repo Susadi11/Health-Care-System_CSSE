@@ -34,7 +34,7 @@ const QR_Generator = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await fetch('http://localhost:5555/patientRoute', {
+            const response = await fetch('https://health-care-system-csse.vercel.app/patientRoute', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

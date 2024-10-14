@@ -4,6 +4,8 @@ import SideBar from "../components/SideBar";
 import Navbar from "../components/utility/Navbar";
 import BackButton from "../components/utility/BackButton";
 import Breadcrumb from "../components/utility/Breadcrumbs";
+import Appointment from "../components/Vinuk/Appoinment";
+import UserFlowChart from "../components/Vinuk/UserFlowChart";
 
 export default function Dashboard() {
     const [loading, setLoading] = useState(false);
@@ -39,6 +41,11 @@ export default function Dashboard() {
                                 <BackButton />
                                 <Breadcrumb items={breadcrumbItems} />
                             </div>
+                            <div>
+                                <Appointment />
+                                <UserFlowChart />
+                            </div>
+                            
                             <div className="p-4">
 
                             </div>
@@ -49,7 +56,10 @@ export default function Dashboard() {
                                             currentTile === 1 ? "opacity-100" : "opacity-0"
                                         }`}
                                     >
-
+                                       
+                                    </div>
+                                    <div>
+                                    
                                     </div>
                                     <div
                                         className={`absolute top-0 left-0 w-full h-full transition-opacity duration-1000 ${

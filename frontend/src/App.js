@@ -12,7 +12,11 @@ import GenerateQR from "./pages/HealthCard_Pages/GenerateQR";
 
 import Appointments from "./pages/Appointments";
 import Services from "./pages/Services";
+ 
 import AddAppointment from "./pages/AddAppointment";
+ 
+import ProfilePage from "./pages/ProfilePage";
+ 
 
 export default function App() {
   const [loading, setLoading] = useState(true);
@@ -32,6 +36,7 @@ export default function App() {
         {/* Dashboard route */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
         <Route path="/signUp" element={<SignUpPage />} />
         <Route path="/QR_Scanner/home" element={<QR_Page />} />
         <Route path="/signup/register" element={<RegPage />} />{" "}
@@ -41,6 +46,9 @@ export default function App() {
         <Route path="/appointments/home" element={<Appointments />} />
         <Route path="/services/home" element={<Services />} />
         <Route path="/add-appointment" element={<AddAppointment />} />
+ 
+        <Route path="/generate-qr/:id" element={<GenerateQR />} />
+ 
       </Routes>
     </div>
   );

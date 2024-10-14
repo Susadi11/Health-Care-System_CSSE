@@ -73,12 +73,12 @@ router.get('/patients', async (req, res) => {
     }
 });
 
-// DELETE route for deleting a patient by ID
-router.delete('/patients/:id', async (req, res) => {
-    const { id } = req.params;
+// DELETE route for deleting a patient by U_id
+router.delete('/patients/:U_id', async (req, res) => {
+    const { U_id } = req.params;
 
     try {
-        const deletedPatient = await Patient.findByIdAndDelete(id);
+        const deletedPatient = await Patient.findOneAndDelete({ U_id });
 
         // Check if a patient was found and deleted
         if (!deletedPatient) {
@@ -93,10 +93,17 @@ router.delete('/patients/:id', async (req, res) => {
     }
 });
 
+
 // New route to get a patient by U_id
 router.get('/patients/:U_id', async (req, res) => {
     try {
-        const patient = await Patient.findOne({ U_id: req.params.U_id });
+        const { U_id } = req.params;
+        console.log('Searching for patient with U_id:', U_id); // Add this log
+
+        const patient = await Patient.findOne({ U_id: U_id });
+
+        console.log('Found patient:', patient); // Add this log
+
         if (!patient) {
             return res.status(404).json({ message: 'Patient not found' });
         }
@@ -107,21 +114,23 @@ router.get('/patients/:U_id', async (req, res) => {
     }
 });
 
-// Update a patient by ID
-router.put('/patients/:id', async (req, res) => {
-    console.log('Updating patient ID:', req.params.id);
-    console.log('Request body:', req.body);
+// Update a patient by U_id
+router.put('/patients/:U_id', async (req, res) => {
+    const { U_id } = req.params;
 
     try {
-        const updatedPatient = await Patient.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedPatient = await Patient.findOneAndUpdate({ U_id }, req.body, { new: true });
+
         if (!updatedPatient) {
             return res.status(404).json({ message: 'Patient not found' });
         }
+
         res.json(updatedPatient);
     } catch (error) {
         console.error('Error updating patient:', error);
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
 });
+
 
 export default router;
