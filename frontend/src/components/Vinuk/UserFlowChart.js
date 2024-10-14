@@ -70,9 +70,9 @@ const options = {
         color: '#1f2937',
       },
       grid: {
-        display: false, // Hide vertical grid lines
+        display: false,
       },
-      stacked: false, // Ensure bars are not stacked
+      stacked: false,
     },
     y: {
       title: {
@@ -86,12 +86,12 @@ const options = {
         color: '#1f2937',
       },
       grid: {
-        color: 'rgba(0, 0, 0, 0.1)', // Light Y-axis grid lines
+        color: 'rgba(0, 0, 0, 0.1)',
       },
-      stacked: false, // Ensure bars are not stacked
+      stacked: false,
     },
   },
-  barThickness: 20, // Control the bar thickness
+  barThickness: 20,
   grouped: true, // Group bars together for each day
 };
 
@@ -104,10 +104,16 @@ const PatientFlowWeeklyBarChart = () => {
     border: '1px solid #e5e7eb',
     borderRadius: '0.5rem',
     backgroundColor: '#ffffff',
+    // Added shadow effect
+    boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.1)', // Subtle shadow
+    transition: 'transform 0.3s ease-in-out', // Smooth transition effect
   };
 
   return (
-    <div style={graphStyle}>
+    <div
+      style={graphStyle}
+      className="hover:shadow-lg hover:scale-105 transition-all duration-300 ease-in-out"
+    >
       <h2 className="text-center text-2xl sm:text-3xl font-bold text-gray-800 mb-6">
         Patient Flow - Weekly Overview
       </h2>
