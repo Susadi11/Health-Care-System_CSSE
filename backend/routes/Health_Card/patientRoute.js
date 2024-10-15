@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
         }
 
         // Generate a unique U_id
-        const U_id = await generateUniqueId();
+        const U_id = await generateUniqueId(); 
 
         // Create a new patient
         const newPatient = await Patient.create({
@@ -74,19 +74,20 @@ router.get('/patients', async (req, res) => {
 });
 
 // DELETE route for deleting a patient by U_id
+// DELETE route for deleting a patient by U_id
 router.delete('/patients/:U_id', async (req, res) => {
-    const { U_id } = req.params;
+    const { U_id } = req.params;  // Use U_id from the request params
 
     try {
+        // Find and delete the patient by U_id
         const deletedPatient = await Patient.findOneAndDelete({ U_id });
 
-        // Check if a patient was found and deleted
         if (!deletedPatient) {
             return res.status(404).json({ message: "Patient not found" });
         }
 
-        // Respond with success message
         res.status(200).json({ message: "Patient deleted successfully" });
+
     } catch (error) {
         console.error("Error deleting patient:", error);
         res.status(500).json({ message: "Internal Server Error", error: error.message });
@@ -94,8 +95,12 @@ router.delete('/patients/:U_id', async (req, res) => {
 });
 
 
+
+
+
+
 // New route to get a patient by U_id
-router.get('/patients/:U_id', async (req, res) => {
+router.get('/patients/:_id', async (req, res) => {
     try {
         const { U_id } = req.params;
         console.log('Searching for patient with U_id:', U_id); // Add this log

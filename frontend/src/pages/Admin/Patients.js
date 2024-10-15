@@ -38,32 +38,41 @@ const Patients = () => {
             setLoading(false);
         }
     };
-
-    const handleDelete = async (id) => {
+    const handleDelete = async (U_id) => {
         if (window.confirm('Are you sure you want to delete this patient?')) {
             try {
-                const response = await fetch(`https://health-care-system-csse.vercel.app/patientRoute/patients/${id}`, {
+                // Make a DELETE request to the backend using the U_id
+                const response = await fetch(`https://health-care-system-csse.vercel.app/patientRoute/patients/${U_id}`, {
                     method: 'DELETE',
                 });
-                if (!response.ok) throw new Error('Failed to delete the patient');
-                setPatients(prevPatients => prevPatients.filter(patient => patient._id !== id));
+    
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to delete the patient');
+                }
+    
+                // Remove the patient from the local state after successful deletion
+                setPatients(prevPatients => prevPatients.filter(patient => patient.U_id !== U_id));
                 enqueueSnackbar("Patient deleted successfully", { variant: 'success' });
+    
             } catch (error) {
                 console.error('Error deleting patient:', error);
-                setError("An error occurred while deleting the patient. Please try again.");
-                enqueueSnackbar("Failed to delete patient", { variant: 'error' });
+                enqueueSnackbar(error.message || "Failed to delete patient", { variant: 'error' });
             }
         }
     };
+    
+    
+    
 
     const handleEdit = (patient) => {
         setEditMode(true);
         setCurrentPatient(patient);
-    };
+    };   
 
     const handleUpdate = async (updatedData) => {
         try {
-            const response = await fetch(`https://health-care-system-csse.vercel.app/patientRoute/patients/${currentPatient._id}`, {
+            const response = await fetch(`https://health-care-system-csse.vercel.app/patientRoute/patients/${currentPatient.U_id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -254,7 +263,7 @@ const Patients = () => {
                                                             <FontAwesomeIcon icon={faEdit}
                                                                              className="text-green-600 hover:text-green-800"/>
                                                         </button>
-                                                        <button onClick={() => handleDelete(patient._id)}>
+                                                        <button onClick={() => handleDelete(patient.U_id)}>
                                                             <FontAwesomeIcon icon={faTrashAlt}
                                                                              className="text-red-600 hover:text-red-800"/>
                                                         </button>
