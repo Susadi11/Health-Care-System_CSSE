@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { SnackbarProvider } from 'notistack';
 import SideBar from '../../components/SideBar';
 import Navbar from '../../components/utility/Navbar';
@@ -6,6 +7,11 @@ import Breadcrumb from '../../components/utility/Breadcrumbs';
 import BackButton from '../../components/utility/BackButton';
 
 const PaymentPage = () => {
+    const { state } = useLocation();
+    const navigate = useNavigate();
+    const appointment = state?.appointment;
+    const service = state?.service;
+    
     const [paymentMethod, setPaymentMethod] = useState('credit'); // default to credit card
     const [name, setName] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -27,6 +33,8 @@ const PaymentPage = () => {
             expiryYear,
             securityCode,
             paymentDate, // Add payment date to the data being sent to the server
+            appointmentId: appointment?.appointmentId,
+            amount: service?.price || 100, // Default amount if no service price
         };
 
         try {
@@ -49,6 +57,8 @@ const PaymentPage = () => {
                 setExpiryMonth('01');
                 setExpiryYear('2024');
                 setSecurityCode('');
+                // Navigate back to appointments or dashboard
+                navigate('/appointments/home');
             } else {
                 alert(`Error: ${data.message}`);
             }
@@ -83,7 +93,63 @@ const PaymentPage = () => {
                                 <div className="mb-8">
                                     <h1 className="text-center font-bold text-xl uppercase">Secure Payment Info</h1>
                                 </div>
-                                <form onSubmit={handlePayment}>
+                                
+                                {/* Appointment Summary */}
+                                {appointment && (
+                                    <div className="mb-6 p-4 bg-gray-50 rounded-lg border">
+                                        <h3 className="font-bold text-lg mb-3 text-gray-800">Appointment Summary</h3>
+                                        <div className="space-y-2 text-sm">
+                                            <div className="flex justify-between">
+                                                <span className="font-medium">Appointment ID:</span>
+                                                <span>{appointment.appointmentId}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="font-medium">Date:</span>
+                                                <span>{new Date(appointment.appointmentDate).toLocaleDateString()}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="font-medium">Time:</span>
+                                                <span>{appointment.time}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="font-medium">Reason:</span>
+                                                <span>{appointment.appointmentReason}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <span className="font-medium">Location:</span>
+                                                <span>{appointment.location}</span>
+                                            </div>
+                                            {service && (
+                                                <div className="flex justify-between">
+                                                    <span className="font-medium">Service:</span>
+                                                    <span>{service.title}</span>
+                                                </div>
+                                            )}
+                                            <div className="flex justify-between border-t pt-2 mt-2">
+                                                <span className="font-bold">Amount:</span>
+                                                <span className="font-bold text-green-600">${service?.price || 100}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                {/* Fallback message if no appointment data */}
+                                {!appointment && (
+                                    <div className="mb-6 p-4 bg-yellow-50 rounded-lg border border-yellow-200">
+                                        <h3 className="font-bold text-lg mb-2 text-yellow-800">No Appointment Data</h3>
+                                        <p className="text-sm text-yellow-700">
+                                            No appointment information found. Please go back and create an appointment first.
+                                        </p>
+                                        <button
+                                            onClick={() => navigate('/add-appointment')}
+                                            className="mt-3 bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition duration-200"
+                                        >
+                                            Create Appointment
+                                        </button>
+                                    </div>
+                                )}
+                                
+                                <form onSubmit={handlePayment} style={{ opacity: appointment ? 1 : 0.5, pointerEvents: appointment ? 'auto' : 'none' }}>
                                     {/* Payment Method Selection */}
                                     <div className="mb-5">
                                         <h2 className="font-bold text-sm mb-2 ml-1">Payment Method</h2>
