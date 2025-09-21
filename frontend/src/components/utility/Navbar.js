@@ -1,12 +1,23 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LogOut, User } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
 
 export default function Navbar() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const { user, logout, loading } = useAuth();
 
     const toggleMobileMenu = () => {
         setMobileMenuOpen(!mobileMenuOpen);
+    };
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            setMobileMenuOpen(false);
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
     };
 
     return (
@@ -45,19 +56,49 @@ export default function Navbar() {
 
                 {/* Right side of the navbar */}
                 <div className="flex lg:flex-1 justify-end space-x-3">
-                    {/* Login button - visible on desktop, hidden on mobile */}
-                    <Link to="/login" className="hidden lg:block nav-item">
-                        <div className="px-3 py-1 border border-blue-500 text-sm leading-4 font-medium rounded-full text-black transition-all duration-200 hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Login
+                    {loading ? (
+                        // Loading state
+                        <div className="hidden lg:flex items-center">
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
                         </div>
-                    </Link>
+                    ) : user ? (
+                        // Authenticated user section
+                        <>
+                            {/* User info - visible on desktop, hidden on mobile */}
+                            <div className="hidden lg:flex items-center space-x-3">
+                                <div className="flex items-center space-x-2">
+                                    <User className="h-5 w-5 text-gray-600" />
+                                    <span className="text-sm font-medium text-gray-700">
+                                        {user.displayName || user.email?.split('@')[0] || 'User'}
+                                    </span>
+                                </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center space-x-1 px-3 py-1 border border-red-500 text-sm leading-4 font-medium rounded-full text-red-600 transition-all duration-200 hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                >
+                                    <LogOut className="h-4 w-4" />
+                                    <span>Logout</span>
+                                </button>
+                            </div>
+                        </>
+                    ) : (
+                        // Non-authenticated user section
+                        <>
+                            {/* Login button - visible on desktop, hidden on mobile */}
+                            <Link to="/login" className="hidden lg:block nav-item">
+                                <div className="px-3 py-1 border border-blue-500 text-sm leading-4 font-medium rounded-full text-black transition-all duration-200 hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Login
+                                </div>
+                            </Link>
 
-                    {/* Sign Up button - visible on desktop, hidden on mobile */}
-                    <Link to="/signup" className="hidden lg:block nav-item">
-                        <div className="px-3 py-1 border border-blue-500 bg-blue-500 text-sm leading-4 font-medium rounded-full text-white transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                            Sign Up
-                        </div>
-                    </Link>
+                            {/* Sign Up button - visible on desktop, hidden on mobile */}
+                            <Link to="/signup" className="hidden lg:block nav-item">
+                                <div className="px-3 py-1 border border-blue-500 bg-blue-500 text-sm leading-4 font-medium rounded-full text-white transition-all duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Sign Up
+                                </div>
+                            </Link>
+                        </>
+                    )}
 
                     {/* Mobile menu button - visible on mobile, hidden on desktop */}
                     <button
@@ -82,8 +123,37 @@ export default function Navbar() {
                         <Link to="/" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Home</Link>
                         <Link to="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Dashboard</Link>
                         <Link to="/serviceView" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Services</Link>
-                        <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Login</Link>
-                        <Link to="/signUp" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Sign Up</Link>
+                        
+                        {loading ? (
+                            // Loading state for mobile
+                            <div className="flex items-center justify-center px-3 py-2">
+                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+                            </div>
+                        ) : user ? (
+                            // Authenticated user mobile menu
+                            <>
+                                <div className="border-t border-gray-200 my-2"></div>
+                                <div className="flex items-center space-x-2 px-3 py-2">
+                                    <User className="h-5 w-5 text-gray-600" />
+                                    <span className="text-base font-medium text-gray-700">
+                                        {user.displayName || user.email?.split('@')[0] || 'User'}
+                                    </span>
+                                </div>
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center space-x-2 w-full px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 hover:text-red-700"
+                                >
+                                    <LogOut className="h-5 w-5" />
+                                    <span>Logout</span>
+                                </button>
+                            </>
+                        ) : (
+                            // Non-authenticated user mobile menu
+                            <>
+                                <Link to="/login" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Login</Link>
+                                <Link to="/signUp" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 hover:text-gray-900">Sign Up</Link>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
