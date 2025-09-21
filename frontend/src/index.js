@@ -5,14 +5,17 @@ import './index.css';
 
 import App from "./App";
 import {SnackbarProvider} from "notistack";
+import { AuthProvider } from './contexts/AuthContext';
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <BrowserRouter>
-        <SnackbarProvider>
-            <App/>
-        </SnackbarProvider>
+        <AuthProvider>
+            <SnackbarProvider>
+                <App/>
+            </SnackbarProvider>
+        </AuthProvider>
     </BrowserRouter>
 );
 

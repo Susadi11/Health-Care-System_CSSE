@@ -21,6 +21,7 @@ import AddAppointment from "./pages/AddAppointment";
 
 import ProfilePage from "./pages/ProfilePage";
 import Bookings from "./pages/Bookings";
+import PaymentPage from "./pages/Admin/PaymentPage";
 
 
 export default function App() {
@@ -56,6 +57,7 @@ export default function App() {
         <Route path="/ServiceView" element={<ServiceView />} />
         <Route path="/add-appointment" element={<AddAppointment />} />
         <Route path="/bookings/home" element={<Bookings />} />
+        <Route path="/PaymentPage" element={<PaymentPage />} />
         <Route path="/generate-qr/:id" element={<GenerateQR />} />
 
       </Routes>

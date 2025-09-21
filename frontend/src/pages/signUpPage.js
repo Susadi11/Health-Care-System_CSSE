@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
-import { auth } from '../firebaseConfig'; // Adjust the path to where firebaseConfig.js is located
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, googleProvider } from '../firebaseConfig'; // Adjust the path to where firebaseConfig.js is located
+import { createUserWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
 import { FaArrowLeft } from 'react-icons/fa'; // Import an arrow icon (FontAwesome for this example)
+import GoogleButton from '../components/GoogleButton';
+import Divider from '../components/Divider';
 
 const SignUpPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
     const navigate = useNavigate(); // Initialize the useNavigate hook
 
     const handleSignUp = (e) => {
@@ -23,6 +26,21 @@ const SignUpPage = () => {
                 console.error('Error signing up:', error);
                 setError('Could not create account. Try again.');
             });
+    };
+
+    const handleGoogleSignUp = async () => {
+        setError(null);
+        setIsGoogleLoading(true);
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            console.log('Google sign-up successful:', result.user);
+            navigate('/signup/register'); // Navigate to the register page after Google signup
+        } catch (error) {
+            console.error('Error with Google sign-up:', error);
+            setError('Failed to sign up with Google');
+        } finally {
+            setIsGoogleLoading(false);
+        }
     };
 
     return (
@@ -66,6 +84,13 @@ const SignUpPage = () => {
                                 SIGN UP
                             </button>
                         </form>
+                        
+                        <Divider />
+                        <GoogleButton 
+                            onClick={handleGoogleSignUp} 
+                            text={isGoogleLoading ? "Signing up..." : "Sign up with Google"}
+                            className={isGoogleLoading ? "opacity-75 cursor-not-allowed" : ""}
+                        />
                         <div className="flex flex-col mt-4 items-center text-sm">
                             <h3>Already have an account? <Link to="/login" className="text-blue-400">Log In</Link></h3>
                         </div>

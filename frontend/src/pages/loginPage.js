@@ -1,12 +1,16 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig'; // Update the path to firebaseConfig.js
+import { Link, useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { auth, googleProvider } from '../firebaseConfig'; // Update the path to firebaseConfig.js
+import GoogleButton from '../components/GoogleButton';
+import Divider from '../components/Divider';
 
 const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -15,12 +19,28 @@ const LoginPage = () => {
         signInWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 console.log('Logged in user:', userCredential.user);
-                // Redirect or perform additional actions after login
+                // Redirect to dashboard after successful login
+                navigate('/dashboard');
             })
             .catch((error) => {
                 console.error('Error logging in:', error);
                 setError('Invalid email or password');
             });
+    };
+
+    const handleGoogleSignIn = async () => {
+        setError(null);
+        setIsGoogleLoading(true);
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            console.log('Google sign-in successful:', result.user);
+            navigate('/dashboard');
+        } catch (error) {
+            console.error('Error with Google sign-in:', error);
+            setError('Failed to sign in with Google');
+        } finally {
+            setIsGoogleLoading(false);
+        }
     };
 
     return (
@@ -65,6 +85,13 @@ const LoginPage = () => {
                                 LOG IN
                             </button>
                         </form>
+                        
+                        <Divider />
+                        <GoogleButton 
+                            onClick={handleGoogleSignIn} 
+                            text={isGoogleLoading ? "Signing in..." : "Sign in with Google"}
+                            className={isGoogleLoading ? "opacity-75 cursor-not-allowed" : ""}
+                        />
                         <div className="flex flex-col mt-4 items-center text-sm">
                             <h3>Don't have an account? <Link to="/signup" className="text-blue-400">Sign Up</Link></h3>
                         </div>

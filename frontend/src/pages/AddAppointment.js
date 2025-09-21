@@ -87,9 +87,18 @@ const AddAppointment = () => {
 
         if (!response.ok) throw new Error("Failed to create appointment");
 
-        navigate("/services/home"); // Redirect back to services page
+        const appointmentData = await response.json();
+        
+        // Navigate to payment page with appointment data
+        navigate("/PaymentPage", { 
+          state: { 
+            appointment: appointmentData.appointment,
+            service: service 
+          } 
+        });
       } catch (error) {
         console.error("Error creating appointment:", error);
+        alert("Failed to create appointment. Please try again.");
       }
     }
   };
@@ -260,7 +269,6 @@ const AddAppointment = () => {
             <div className="flex flex-col md:flex-row justify-between mt-4">
               <button
                 type="submit"
-                onClick={() => navigate("/PaymentPage")}
                 className="bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-200"
               >
                 Add Appointment
